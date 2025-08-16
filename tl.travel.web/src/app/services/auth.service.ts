@@ -32,7 +32,9 @@ export class AuthService {
         tap(response => {
           if (response.token) {
             localStorage.setItem('token', response.token);
-            localStorage.setItem('refreshToken', response.refreshToken);
+            if (response.refreshToken) {
+              localStorage.setItem('refreshToken', response.refreshToken);
+            }
             this.currentUserSubject.next(response.user);
           }
         })
@@ -45,7 +47,9 @@ export class AuthService {
         tap(response => {
           if (response.token) {
             localStorage.setItem('token', response.token);
-            localStorage.setItem('refreshToken', response.refreshToken);
+            if (response.refreshToken) {
+              localStorage.setItem('refreshToken', response.refreshToken);
+            }
             this.currentUserSubject.next(response.user);
           }
         })
@@ -53,35 +57,26 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.apiService.post('/Security/Logout', {})
-      .pipe(
-        tap(() => {
-          localStorage.removeItem('token');
-          localStorage.removeItem('refreshToken');
-          this.currentUserSubject.next(null);
-        })
-      );
-  }
-
-  refreshToken(): Observable<AuthResponse> {
-    const refreshToken = localStorage.getItem('refreshToken');
-    return this.apiService.post<AuthResponse>('/Security/RefreshToken', { refreshToken })
-      .pipe(
-        tap(response => {
-          if (response.token) {
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('refreshToken', response.refreshToken);
-          }
-        })
-      );
+    // Since logout endpoint might not work, just clear local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    this.currentUserSubject.next(null);
+    
+    // Try to call logout endpoint, but don't fail if it doesn't work
+    return this.apiService.post('/Security/Logout', {}).pipe(
+      catchError(() => {
+        // Ignore logout endpoint errors
+        return new Observable(observer => observer.complete());
+      })
+    );
   }
 
   readToken(): Observable<any> {
-    return this.apiService.get('/Security/ReadToken');
-  }
-
-  getCSRFToken(): Observable<any> {
-    return this.apiService.get('/Security/GetCSRFToken');
+    // Only call if authenticated
+    if (this.isAuthenticated()) {
+      return this.apiService.get('/Security/ReadToken');
+    }
+    return new Observable(observer => observer.next(null));
   }
 
   isAuthenticated(): boolean {

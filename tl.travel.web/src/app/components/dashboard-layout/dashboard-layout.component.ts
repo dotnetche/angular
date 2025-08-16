@@ -50,9 +50,8 @@ export class DashboardLayoutComponent implements OnInit {
       },
       error: (error) => {
         console.error('Logout error:', error);
-        // Even if logout fails on server, clear local storage and redirect
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
+        // Even if logout fails on server, still redirect (tokens already cleared)
+        this.showSnackBar('Излизане от системата');
         this.router.navigate(['/login']);
       }
     });
