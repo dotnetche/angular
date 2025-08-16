@@ -17,5 +17,9 @@ export const routes: Routes = [
   {
     path: 'hotel-rooms',
     loadComponent: () => import('./components/hotel-rooms/hotel-rooms.component').then(m => m.HotelRoomsComponent)
+  },
+  {
+    path: 'feeding-types',
+    loadComponent: () => import('./components/feeding-types/feeding-types.component').then(m => m.FeedingTypesComponent)
   }
 ];
