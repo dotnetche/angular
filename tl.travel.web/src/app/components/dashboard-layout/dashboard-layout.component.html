@@ -67,20 +67,20 @@
         
         <!-- User Menu -->
         <mat-menu #userMenu="matMenu">
-          <div class="px-4 py-2 border-b">
+          <div class="px-4 py-2 border-b bg-gray-50">
             <div class="font-medium">{{ currentUser?.name || 'Потребител' }}</div>
             <div class="text-sm text-gray-500">{{ currentUser?.email || '' }}</div>
           </div>
-          <button mat-menu-item>
+          <button mat-menu-item class="hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200">
             <mat-icon>person</mat-icon>
             <span>Профил</span>
           </button>
-          <button mat-menu-item>
+          <button mat-menu-item class="hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200">
             <mat-icon>settings</mat-icon>
             <span>Настройки</span>
           </button>
           <mat-divider></mat-divider>
-          <button mat-menu-item (click)="logout()">
+          <button mat-menu-item (click)="logout()" class="hover:bg-red-50 hover:text-red-700 transition-colors duration-200">
             <mat-icon>logout</mat-icon>
             <span>Изход</span>
           </button>

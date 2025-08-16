@@ -101,6 +101,9 @@ export class ClientsComponent implements OnInit {
         this.dataSource.data = response.data;
         this.totalCount = response.totalCount;
         this.isLoading = false;
+        
+        // Clear selection when data changes
+        this.selection.clear();
       },
       error: (error) => {
         console.error('Error loading clients:', error);
