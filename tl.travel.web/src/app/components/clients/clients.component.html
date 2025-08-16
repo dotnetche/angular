@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-gray-50">
-  <!-- Sidebar -->
+  
   <div class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-10">
     <div class="p-6">
       <h1 class="text-xl font-bold text-gray-800">TL Travel</h1>
@@ -45,9 +45,9 @@
     </nav>
   </div>
 
-  <!-- Main Content -->
+  
   <div class="ml-64">
-    <!-- Header -->
+    
     <div class="bg-white shadow-sm border-b px-8 py-4 flex justify-between items-center">
       <div class="flex items-center space-x-4">
         <span class="text-gray-600">Клиенти</span>
@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <!-- Add/Edit Form -->
+    
     <div *ngIf="showAddForm" class="bg-white m-8 rounded-lg shadow-sm border">
       <div class="px-8 py-6 border-b">
         <h2 class="text-xl font-semibold text-gray-800">
@@ -70,29 +70,29 @@
       
       <form [formGroup]="clientForm" class="p-8 space-y-6">
         <div class="grid grid-cols-1 gap-6">
-          <!-- Name Field -->
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Клиент *</mat-label>
+          
+          <mat-form-field class="w-full">
+            <mat-label>Клиент</mat-label>
             <input matInput formControlName="name" placeholder="Въведете име на клиента">
             <mat-error>{{ getErrorMessage('name') }}</mat-error>
           </mat-form-field>
 
-          <!-- Email Field -->
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Имейл адрес *</mat-label>
+          
+          <mat-form-field class="w-full">
+            <mat-label>Имейл адрес</mat-label>
             <input matInput formControlName="email" type="email" placeholder="Въведете имейл адрес">
             <mat-error>{{ getErrorMessage('email') }}</mat-error>
           </mat-form-field>
 
-          <!-- Phone Field -->
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Телефон *</mat-label>
+          
+          <mat-form-field class="w-full">
+            <mat-label>Телефон</mat-label>
             <input matInput formControlName="phone" placeholder="Въведете телефонен номер">
             <mat-error>{{ getErrorMessage('phone') }}</mat-error>
           </mat-form-field>
         </div>
 
-        <!-- Form Actions -->
+        
         <div class="flex space-x-4 pt-4">
           <button 
             mat-raised-button 
@@ -125,9 +125,9 @@
       </form>
     </div>
 
-    <!-- Clients List -->
+    
     <div *ngIf="!showAddForm" class="m-8">
-      <!-- Page Header -->
+      
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Клиенти</h1>
         <button 
@@ -140,12 +140,12 @@
         </button>
       </div>
 
-      <!-- Search and Filters -->
+      
       <div class="bg-white rounded-lg shadow-sm border mb-6">
         <div class="p-6">
           <form [formGroup]="searchForm" class="flex items-center space-x-4">
-            <mat-form-field appearance="outline" class="flex-1">
-              <mat-label>Търсене</mat-label>
+            <mat-form-field class="flex-1">
+              <mat-label >Търсене</mat-label>
               <input matInput formControlName="searchTerm" placeholder="Търсене по име, имейл или телефон">
               <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
@@ -153,10 +153,10 @@
         </div>
       </div>
 
-      <!-- Data Table -->
+      
       <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
         <mat-table [dataSource]="dataSource" class="w-full">
-          <!-- Checkbox Column -->
+          
           <ng-container matColumnDef="select">
             <mat-header-cell *matHeaderCellDef class="w-12">
               <mat-checkbox 
@@ -174,25 +174,25 @@
             </mat-cell>
           </ng-container>
 
-          <!-- Name Column -->
+          
           <ng-container matColumnDef="name">
             <mat-header-cell *matHeaderCellDef class="font-semibold">Клиент</mat-header-cell>
             <mat-cell *matCellDef="let client" class="font-medium">{{ client.name }}</mat-cell>
           </ng-container>
 
-          <!-- Email Column -->
+          
           <ng-container matColumnDef="email">
             <mat-header-cell *matHeaderCellDef class="font-semibold">Имейл адрес</mat-header-cell>
             <mat-cell *matCellDef="let client" class="text-blue-600">{{ client.email }}</mat-cell>
           </ng-container>
 
-          <!-- Phone Column -->
+          
           <ng-container matColumnDef="phone">
             <mat-header-cell *matHeaderCellDef class="font-semibold">Телефон</mat-header-cell>
             <mat-cell *matCellDef="let client">{{ client.phone }}</mat-cell>
           </ng-container>
 
-          <!-- Actions Column -->
+          
           <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef class="w-32"></mat-header-cell>
             <mat-cell *matCellDef="let client" class="w-32">
@@ -226,12 +226,12 @@
           <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 cursor-pointer"></mat-row>
         </mat-table>
 
-        <!-- Loading State -->
+        
         <div *ngIf="isLoading" class="flex justify-center items-center py-8">
-          <mat-spinner diameter="40"></mat-spinner>
+          <mat-spinner  diameter="40"></mat-spinner>
         </div>
 
-        <!-- Empty State -->
+        
         <div *ngIf="!isLoading && dataSource.data.length === 0" class="text-center py-12">
           <mat-icon class="text-gray-400 text-6xl mb-4">people_outline</mat-icon>
           <h3 class="text-lg font-medium text-gray-600 mb-2">Няма намерени клиенти</h3>
@@ -245,11 +245,11 @@
           </button>
         </div>
 
-        <!-- Pagination -->
+        
         <div class="border-t bg-gray-50 px-6 py-3">
           <div class="flex items-center justify-between">
             <div class="text-sm text-gray-600">
-              От {{ currentPage * pageSize + 1 }} до {{ Math.min((currentPage + 1) * pageSize, totalCount) }} от {{ totalCount }} резултата
+              От {{ currentPage * pageSize + 1 }} до {{ math.min((currentPage + 1) * pageSize, totalCount) }} от {{ totalCount }} резултата
             </div>
             
             <mat-paginator

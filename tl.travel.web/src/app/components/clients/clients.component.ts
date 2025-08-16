@@ -9,9 +9,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snackbar';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { SelectionModel } from '@angular/cdk/collections';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 import { ClientsService } from '../../services/clients.service';
 import { ClientDTO, BaseGridRequestModel } from '../../models/client.model';
@@ -31,7 +32,8 @@ import { ClientDTO, BaseGridRequestModel } from '../../models/client.model';
     MatCheckboxModule,
     MatDialogModule,
     MatSnackBarModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss'
@@ -45,6 +47,8 @@ export class ClientsComponent implements OnInit {
   
   clientForm: FormGroup;
   searchForm: FormGroup;
+
+  math = Math;
   
   isLoading = false;
   isEditing = false;
