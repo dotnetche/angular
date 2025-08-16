@@ -43,7 +43,8 @@ import { HotelDTO, LocationDTO, PartnerDTO, BaseGridRequestModel } from '../../m
 export class HotelsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  displayedColumns: string[] = ['select', 'name', 'stars', 'locationName', 'partnerName', 'contacts', 'isTemporaryClosed', 'actions'];
+  displayedColumns: string[] = [];
+  dynamicColumns: string[] = [];
   dataSource = new MatTableDataSource<HotelDTO>();
   selection = new SelectionModel<HotelDTO>(true, []);
   
@@ -111,6 +112,10 @@ export class HotelsComponent implements OnInit {
       next: (response) => {
         this.dataSource.data = response.data;
         this.totalCount = response.totalCount;
+        
+        // Generate dynamic columns from data
+        this.generateDynamicColumns(response.data);
+        
         this.isLoading = false;
         
         // Clear selection when data changes
@@ -124,7 +129,104 @@ export class HotelsComponent implements OnInit {
     });
   }
 
+  generateDynamicColumns(data: HotelDTO[]): void {
+    if (data && data.length > 0) {
+      // Get all unique property names from the data
+      const allProperties = new Set<string>();
+      
+      data.forEach(item => {
+        Object.keys(item).forEach(key => {
+          // Skip null/undefined values and functions
+          if (item[key as keyof HotelDTO] !== null && 
+              item[key as keyof HotelDTO] !== undefined &&
+              typeof item[key as keyof HotelDTO] !== 'function') {
+            allProperties.add(key);
+          }
+        });
+      });
+      
+      // Convert to array and sort for consistent order
+      this.dynamicColumns = Array.from(allProperties).sort();
+      
+      // Combine with fixed columns (select and actions)
+      this.displayedColumns = ['select', ...this.dynamicColumns, 'actions'];
+    } else {
+      // Fallback to default columns if no data
+      this.dynamicColumns = ['name', 'stars', 'locationName', 'partnerName', 'contacts', 'isTemporaryClosed'];
+      this.displayedColumns = ['select', ...this.dynamicColumns, 'actions'];
+    }
+  }
+
+  getColumnDisplayName(column: string): string {
+    // Map column names to user-friendly display names
+    const columnMap: { [key: string]: string } = {
+      'id': 'ID',
+      'name': 'Име на хотел',
+      'stars': 'Категория',
+      'contacts': 'Контакти',
+      'isTemporaryClosed': 'Статус',
+      'locationId': 'ID Локация',
+      'locationName': 'Локация',
+      'partnerId': 'ID Партньор',
+      'partnerName': 'Партньор',
+      'createdAt': 'Създаден на',
+      'updatedAt': 'Обновен на'
+    };
+    
+    return columnMap[column] || this.capitalizeFirst(column);
+  }
+
+  private capitalizeFirst(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  formatCellValue(value: any, column: string): string {
+    if (value === null || value === undefined) {
+      return '-';
+    }
+    
+    // Special formatting for specific columns
+    if (column === 'stars') {
+      return this.getStarsDisplay(value);
+    }
+    
+    if (column === 'isTemporaryClosed') {
+      return this.getStatusDisplay(value);
+    }
+    
+    // Format dates
+    if (typeof value === 'string' && value.includes('T') && value.includes('Z')) {
+      try {
+        const date = new Date(value);
+        return date.toLocaleDateString('bg-BG');
+      } catch {
+        return value;
+      }
+    }
+    
+    // Format booleans
+    if (typeof value === 'boolean') {
+      return value ? 'Да' : 'Не';
+    }
+    
+    // Format numbers
+    if (typeof value === 'number') {
+      return value.toString();
+    }
+    
+    return value.toString();
+  }
   loadLocations(): void {
+  getColumnClass(column: string): string {
+    const classMap: { [key: string]: string } = {
+      'name': 'font-medium',
+      'stars': 'text-yellow-600',
+      'contacts': 'max-w-xs truncate'
+    };
+    
+    return classMap[column] || '';
+  }
+
     this.hotelsService.getAllLocations().subscribe({
       next: (locations) => {
         this.locations = locations;

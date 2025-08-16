@@ -41,7 +41,8 @@ import { ClientDTO, BaseGridRequestModel } from '../../models/client.model';
 export class ClientsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  displayedColumns: string[] = ['select', 'name', 'email', 'phone', 'actions'];
+  displayedColumns: string[] = [];
+  dynamicColumns: string[] = [];
   dataSource = new MatTableDataSource<ClientDTO>();
   selection = new SelectionModel<ClientDTO>(true, []);
   
@@ -100,6 +101,10 @@ export class ClientsComponent implements OnInit {
       next: (response) => {
         this.dataSource.data = response.data;
         this.totalCount = response.totalCount;
+        
+        // Generate dynamic columns from data
+        this.generateDynamicColumns(response.data);
+        
         this.isLoading = false;
         
         // Clear selection when data changes
@@ -113,6 +118,83 @@ export class ClientsComponent implements OnInit {
     });
   }
 
+  generateDynamicColumns(data: ClientDTO[]): void {
+    if (data && data.length > 0) {
+      // Get all unique property names from the data
+      const allProperties = new Set<string>();
+      
+      data.forEach(item => {
+        Object.keys(item).forEach(key => {
+          // Skip null/undefined values and functions
+          if (item[key as keyof ClientDTO] !== null && 
+              item[key as keyof ClientDTO] !== undefined &&
+              typeof item[key as keyof ClientDTO] !== 'function') {
+            allProperties.add(key);
+          }
+        });
+      });
+      
+      // Convert to array and sort for consistent order
+      this.dynamicColumns = Array.from(allProperties).sort();
+      
+      // Combine with fixed columns (select and actions)
+      this.displayedColumns = ['select', ...this.dynamicColumns, 'actions'];
+    } else {
+      // Fallback to default columns if no data
+      this.dynamicColumns = ['name', 'email', 'phone'];
+      this.displayedColumns = ['select', ...this.dynamicColumns, 'actions'];
+    }
+  }
+
+  getColumnDisplayName(column: string): string {
+    // Map column names to user-friendly display names
+    const columnMap: { [key: string]: string } = {
+      'id': 'ID',
+      'name': 'Име',
+      'email': 'Имейл',
+      'phone': 'Телефон',
+      'createdAt': 'Създаден на',
+      'updatedAt': 'Обновен на',
+      'isActive': 'Активен',
+      'address': 'Адрес',
+      'company': 'Компания',
+      'notes': 'Бележки'
+    };
+    
+    return columnMap[column] || this.capitalizeFirst(column);
+  }
+
+  private capitalizeFirst(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  formatCellValue(value: any): string {
+    if (value === null || value === undefined) {
+      return '-';
+    }
+    
+    // Format dates
+    if (typeof value === 'string' && value.includes('T') && value.includes('Z')) {
+      try {
+        const date = new Date(value);
+        return date.toLocaleDateString('bg-BG');
+      } catch {
+        return value;
+      }
+    }
+    
+    // Format booleans
+    if (typeof value === 'boolean') {
+      return value ? 'Да' : 'Не';
+    }
+    
+    // Format numbers
+    if (typeof value === 'number') {
+      return value.toString();
+    }
+    
+    return value.toString();
+  }
   onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;

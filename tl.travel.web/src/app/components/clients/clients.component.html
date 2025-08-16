@@ -126,22 +126,14 @@
             </mat-cell>
           </ng-container>
 
-          
-          <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px]">Клиент</mat-header-cell>
-            <mat-cell *matCellDef="let client" class="font-medium">{{ client.name }}</mat-cell>
-          </ng-container>
-
-          
-          <ng-container matColumnDef="email">
-            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[200px]">Имейл адрес</mat-header-cell>
-            <mat-cell *matCellDef="let client" class="text-blue-600">{{ client.email }}</mat-cell>
-          </ng-container>
-
-          
-          <ng-container matColumnDef="phone">
-            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px]">Телефон</mat-header-cell>
-            <mat-cell *matCellDef="let client">{{ client.phone }}</mat-cell>
+          <!-- Dynamic Columns -->
+          <ng-container *ngFor="let column of dynamicColumns" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px]">
+              {{ getColumnDisplayName(column) }}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row" [class]="column === 'email' ? 'text-blue-600' : column === 'name' ? 'font-medium' : ''">
+              {{ formatCellValue(row[column]) }}
+            </mat-cell>
           </ng-container>
 
           

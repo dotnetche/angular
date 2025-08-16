@@ -159,43 +159,19 @@
           </mat-cell>
         </ng-container>
 
-        
-        <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[200px]">Име на хотел</mat-header-cell>
-          <mat-cell *matCellDef="let hotel" class="font-medium">{{ hotel.name }}</mat-cell>
-        </ng-container>
-
-        
-        <ng-container matColumnDef="stars">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[100px]">Категория</mat-header-cell>
-          <mat-cell *matCellDef="let hotel" class="text-yellow-600">{{ getStarsDisplay(hotel.stars) }}</mat-cell>
-        </ng-container>
-
-        
-        <ng-container matColumnDef="locationName">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px]">Локация</mat-header-cell>
-          <mat-cell *matCellDef="let hotel">{{ hotel.locationName || 'Не е указана' }}</mat-cell>
-        </ng-container>
-
-        
-        <ng-container matColumnDef="partnerName">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px]">Партньор</mat-header-cell>
-          <mat-cell *matCellDef="let hotel">{{ hotel.partnerName || 'Не е указан' }}</mat-cell>
-        </ng-container>
-
-        
-        <ng-container matColumnDef="contacts">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[200px]">Контакти</mat-header-cell>
-          <mat-cell *matCellDef="let hotel" class="max-w-xs truncate">{{ hotel.contacts }}</mat-cell>
-        </ng-container>
-
-        
-        <ng-container matColumnDef="isTemporaryClosed">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[100px]">Статус</mat-header-cell>
-          <mat-cell *matCellDef="let hotel">
-            <span [class]="hotel.isTemporaryClosed ? 'text-red-600 bg-red-100 px-2 py-1 rounded-full text-xs' : 'text-green-600 bg-green-100 px-2 py-1 rounded-full text-xs'">
-              {{ getStatusDisplay(hotel.isTemporaryClosed) }}
-            </span>
+        <!-- Dynamic Columns -->
+        <ng-container *ngFor="let column of dynamicColumns" [matColumnDef]="column">
+          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px]">
+            {{ getColumnDisplayName(column) }}
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row" [class]="getColumnClass(column)">
+            @if (column === 'isTemporaryClosed') {
+              <span [class]="row[column] ? 'text-red-600 bg-red-100 px-2 py-1 rounded-full text-xs' : 'text-green-600 bg-green-100 px-2 py-1 rounded-full text-xs'">
+                {{ formatCellValue(row[column], column) }}
+              </span>
+            } @else {
+              {{ formatCellValue(row[column], column) }}
+            }
           </mat-cell>
         </ng-container>
 
