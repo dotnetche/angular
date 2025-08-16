@@ -1,0 +1,232 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <div class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-10">
+    <div class="p-6">
+      <h1 class="text-xl font-bold text-gray-800">TL Travel</h1>
+    </div>
+    
+    <nav class="mt-8">
+      <div class="px-6 py-2 bg-gray-600 text-white cursor-pointer flex items-center">
+        <mat-icon class="mr-3">home</mat-icon>
+        Табло
+      </div>
+      <div class="px-6 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer flex items-center" routerLink="/bookings">
+        <mat-icon class="mr-3">event</mat-icon>
+        Резервации
+      </div>
+      <div class="px-6 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer flex items-center" routerLink="/clients">
+        <mat-icon class="mr-3">people</mat-icon>
+        Клиенти
+      </div>
+      <div class="px-6 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer flex items-center" routerLink="/hotels">
+        <mat-icon class="mr-3">hotel</mat-icon>
+        Хотели
+      </div>
+      <div class="px-6 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer flex items-center" routerLink="/hotel-rooms">
+        <mat-icon class="mr-3">settings</mat-icon>
+        Стаи
+      </div>
+      <div class="px-6 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer flex items-center" routerLink="/tour-operators">
+        <mat-icon class="mr-3">business</mat-icon>
+        Туристически оператори
+      </div>
+      <div class="px-6 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer flex items-center" routerLink="/feeding-types">
+        <mat-icon class="mr-3">storage</mat-icon>
+        Изхранване
+      </div>
+      <div class="px-6 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer flex items-center">
+        <mat-icon class="mr-3">place</mat-icon>
+        Дестинации
+      </div>
+      <div class="px-6 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer flex items-center">
+        <mat-icon class="mr-3">payment</mat-icon>
+        Начини на плащане
+      </div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="ml-64">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b px-8 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <span class="text-gray-600">Табло</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button mat-icon-button (click)="refreshData()" matTooltip="Обнови данните">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <div class="w-8 h-8 bg-gray-800 text-white rounded-full flex items-center justify-center">
+          {{ currentUser?.name?.charAt(0)?.toUpperCase() || 'U' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="p-8">
+      <!-- Welcome Section -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+          {{ getWelcomeMessage() }}@if (currentUser?.name) {, {{ currentUser.name }}!}
+        </h1>
+        <p class="text-gray-600">Ето преглед на вашата дейност в TL Travel</p>
+      </div>
+
+      @if (isLoading) {
+        <!-- Loading State -->
+        <div class="flex justify-center items-center py-12">
+          <mat-spinner diameter="50"></mat-spinner>
+        </div>
+      } @else {
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <!-- Hotel Reservations Card -->
+          <mat-card class="stats-card hotel-card">
+            <mat-card-content class="p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-600 mb-1">Резервации на хотели</p>
+                  <p class="text-3xl font-bold text-blue-600">{{ hotelReservations.count }}</p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-full">
+                  <mat-icon class="text-blue-600 text-2xl">hotel</mat-icon>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center">
+                <mat-icon class="text-green-500 text-sm mr-1">trending_up</mat-icon>
+                <span class="text-sm text-green-500 font-medium">+12% от миналия месец</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Client Reservations Card -->
+          <mat-card class="stats-card client-card">
+            <mat-card-content class="p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-600 mb-1">Резервации на клиенти</p>
+                  <p class="text-3xl font-bold text-green-600">{{ clientReservations.count }}</p>
+                </div>
+                <div class="bg-green-100 p-3 rounded-full">
+                  <mat-icon class="text-green-600 text-2xl">people</mat-icon>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center">
+                <mat-icon class="text-green-500 text-sm mr-1">trending_up</mat-icon>
+                <span class="text-sm text-green-500 font-medium">+8% от миналия месец</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Total Reservations Card -->
+          <mat-card class="stats-card total-card">
+            <mat-card-content class="p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-600 mb-1">Общо резервации</p>
+                  <p class="text-3xl font-bold text-purple-600">{{ getTotalReservations() }}</p>
+                </div>
+                <div class="bg-purple-100 p-3 rounded-full">
+                  <mat-icon class="text-purple-600 text-2xl">assessment</mat-icon>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center">
+                <mat-icon class="text-green-500 text-sm mr-1">trending_up</mat-icon>
+                <span class="text-sm text-green-500 font-medium">+10% от миналия месец</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Revenue Card -->
+          <mat-card class="stats-card revenue-card">
+            <mat-card-content class="p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-600 mb-1">Приходи този месец</p>
+                  <p class="text-3xl font-bold text-orange-600">{{ (getTotalReservations() * 150).toLocaleString() }} лв.</p>
+                </div>
+                <div class="bg-orange-100 p-3 rounded-full">
+                  <mat-icon class="text-orange-600 text-2xl">attach_money</mat-icon>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center">
+                <mat-icon class="text-green-500 text-sm mr-1">trending_up</mat-icon>
+                <span class="text-sm text-green-500 font-medium">+15% от миналия месец</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <!-- Quick Actions Card -->
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Бързи действия</mat-card-title>
+              <mat-card-subtitle>Често използвани функции</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="p-6">
+              <div class="grid grid-cols-2 gap-4">
+                <button mat-raised-button color="primary" routerLink="/clients" class="h-16 flex flex-col items-center justify-center">
+                  <mat-icon class="mb-1">person_add</mat-icon>
+                  <span class="text-sm">Нов клиент</span>
+                </button>
+                <button mat-raised-button color="accent" routerLink="/hotels" class="h-16 flex flex-col items-center justify-center">
+                  <mat-icon class="mb-1">hotel</mat-icon>
+                  <span class="text-sm">Нов хотел</span>
+                </button>
+                <button mat-stroked-button routerLink="/bookings" class="h-16 flex flex-col items-center justify-center">
+                  <mat-icon class="mb-1">event</mat-icon>
+                  <span class="text-sm">Резервации</span>
+                </button>
+                <button mat-stroked-button (click)="refreshData()" class="h-16 flex flex-col items-center justify-center">
+                  <mat-icon class="mb-1">refresh</mat-icon>
+                  <span class="text-sm">Обнови</span>
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Recent Activity Card -->
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Последна активност</mat-card-title>
+              <mat-card-subtitle>Най-новите промени в системата</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="p-6">
+              <div class="space-y-4">
+                <div class="flex items-center space-x-3">
+                  <div class="bg-blue-100 p-2 rounded-full">
+                    <mat-icon class="text-blue-600 text-sm">hotel</mat-icon>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium">Нова резервация в хотел</p>
+                    <p class="text-xs text-gray-500">преди 2 часа</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <div class="bg-green-100 p-2 rounded-full">
+                    <mat-icon class="text-green-600 text-sm">person_add</mat-icon>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium">Регистриран нов клиент</p>
+                    <p class="text-xs text-gray-500">преди 4 часа</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <div class="bg-purple-100 p-2 rounded-full">
+                    <mat-icon class="text-purple-600 text-sm">business</mat-icon>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium">Обновен туристически оператор</p>
+                    <p class="text-xs text-gray-500">преди 1 ден</p>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      }
+    </div>
+  </div>
+</div>

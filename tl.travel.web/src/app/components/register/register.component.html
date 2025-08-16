@@ -1,0 +1,144 @@
+<div class="min-h-screen flex">
+  <!-- Left Side - Register Form -->
+  <div class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-20 xl:px-24">
+    <div class="mx-auto w-full max-w-md lg:w-96">
+      <div>
+        <h2 class="mt-6 text-3xl font-bold text-gray-900">
+          Регистрация
+        </h2>
+        <p class="mt-2 text-sm text-gray-600">
+          Създайте вашия акаунт в TL Travel
+        </p>
+      </div>
+
+      <div class="mt-8">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Name Field -->
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Име</mat-label>
+            <input matInput formControlName="name" placeholder="Въведете вашето име">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error>{{ getErrorMessage('name') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Email Field -->
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Имейл адрес</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="Въведете имейл адрес">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error>{{ getErrorMessage('email') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Phone Field -->
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Телефон</mat-label>
+            <input matInput formControlName="phone" placeholder="Въведете телефонен номер">
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-error>{{ getErrorMessage('phone') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Address Field -->
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Адрес</mat-label>
+            <textarea matInput formControlName="address" rows="3" placeholder="Въведете вашия адрес"></textarea>
+            <mat-icon matSuffix>location_on</mat-icon>
+            <mat-error>{{ getErrorMessage('address') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Password Field -->
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Парола</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Въведете парола">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error>{{ getErrorMessage('password') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Submit Button -->
+          <div>
+            <button 
+              mat-raised-button 
+              color="primary" 
+              type="submit"
+              [disabled]="!registerForm.valid || isLoading"
+              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-md">
+              @if (isLoading) {
+                <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+              }
+              Регистрация
+            </button>
+          </div>
+        </form>
+
+        <!-- Login Link -->
+        <div class="mt-6">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-white text-gray-500">Вече имате акаунт?</span>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <button 
+              mat-stroked-button 
+              color="primary"
+              routerLink="/login"
+              class="w-full border-indigo-300 text-indigo-600 hover:bg-indigo-50 font-medium py-3 px-4 rounded-md">
+              Вход
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side - Visual -->
+  <div class="hidden lg:block relative w-0 flex-1">
+    <div class="absolute inset-0 bg-gradient-to-br from-green-600 via-teal-600 to-blue-700">
+      <div class="absolute inset-0 bg-black opacity-20"></div>
+      <div class="relative h-full flex flex-col items-center justify-center text-white px-12">
+        <div class="text-center">
+          <h1 class="text-4xl font-bold mb-4">Присъединете се към нас</h1>
+          <p class="text-xl mb-8 opacity-90">
+            Станете част от най-голямата туристическа платформа в България
+          </p>
+          <div class="grid grid-cols-1 gap-6 text-center">
+            <div class="bg-white bg-opacity-10 rounded-lg p-6">
+              <mat-icon class="text-4xl mb-2">business_center</mat-icon>
+              <div class="text-lg font-semibold">Професионални инструменти</div>
+              <div class="text-sm opacity-75">Управлявайте резервации лесно</div>
+            </div>
+            <div class="bg-white bg-opacity-10 rounded-lg p-6">
+              <mat-icon class="text-4xl mb-2">analytics</mat-icon>
+              <div class="text-lg font-semibold">Детайлни статистики</div>
+              <div class="text-sm opacity-75">Следете вашия бизнес растеж</div>
+            </div>
+            <div class="bg-white bg-opacity-10 rounded-lg p-6">
+              <mat-icon class="text-4xl mb-2">support_agent</mat-icon>
+              <div class="text-lg font-semibold">24/7 Поддръжка</div>
+              <div class="text-sm opacity-75">Винаги сме тук да помогнем</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Travel Icons -->
+        <div class="absolute top-20 left-20 opacity-20">
+          <mat-icon class="text-6xl">explore</mat-icon>
+        </div>
+        <div class="absolute bottom-20 right-20 opacity-20">
+          <mat-icon class="text-6xl">beach_access</mat-icon>
+        </div>
+        <div class="absolute top-1/3 right-10 opacity-20">
+          <mat-icon class="text-4xl">camera_alt</mat-icon>
+        </div>
+        <div class="absolute bottom-1/3 left-10 opacity-20">
+          <mat-icon class="text-4xl">card_travel</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

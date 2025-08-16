@@ -1,0 +1,133 @@
+<div class="min-h-screen flex">
+  <!-- Left Side - Login Form -->
+  <div class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-20 xl:px-24">
+    <div class="mx-auto w-full max-w-sm lg:w-96">
+      <div>
+        <h2 class="mt-6 text-3xl font-bold text-gray-900">
+          Вход в системата
+        </h2>
+        <p class="mt-2 text-sm text-gray-600">
+          Добре дошли в TL Travel
+        </p>
+      </div>
+
+      <div class="mt-8">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Username Field -->
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Потребителско име</mat-label>
+            <input matInput formControlName="userName" placeholder="Въведете потребителско име">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error>{{ getErrorMessage('userName') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Password Field -->
+          <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Парола</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Въведете парола">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error>{{ getErrorMessage('password') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Remember Me -->
+          <div class="flex items-center justify-between">
+            <mat-checkbox formControlName="rememberMe" color="primary">
+              Запомни ме
+            </mat-checkbox>
+            <div class="text-sm">
+              <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                Забравена парола?
+              </a>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div>
+            <button 
+              mat-raised-button 
+              color="primary" 
+              type="submit"
+              [disabled]="!loginForm.valid || isLoading"
+              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-md">
+              @if (isLoading) {
+                <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+              }
+              Вход
+            </button>
+          </div>
+        </form>
+
+        <!-- Register Link -->
+        <div class="mt-6">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-white text-gray-500">Нямате акаунт?</span>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <button 
+              mat-stroked-button 
+              color="primary"
+              routerLink="/register"
+              class="w-full border-indigo-300 text-indigo-600 hover:bg-indigo-50 font-medium py-3 px-4 rounded-md">
+              Регистрация
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side - Visual -->
+  <div class="hidden lg:block relative w-0 flex-1">
+    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700">
+      <div class="absolute inset-0 bg-black opacity-20"></div>
+      <div class="relative h-full flex flex-col items-center justify-center text-white px-12">
+        <div class="text-center">
+          <h1 class="text-4xl font-bold mb-4">TL Travel</h1>
+          <p class="text-xl mb-8 opacity-90">
+            Вашият надежден партньор за незабравими пътувания
+          </p>
+          <div class="grid grid-cols-2 gap-8 text-center">
+            <div>
+              <div class="text-3xl font-bold">1000+</div>
+              <div class="text-sm opacity-75">Доволни клиенти</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold">50+</div>
+              <div class="text-sm opacity-75">Дестинации</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold">200+</div>
+              <div class="text-sm opacity-75">Хотели</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold">24/7</div>
+              <div class="text-sm opacity-75">Поддръжка</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Travel Icons -->
+        <div class="absolute top-20 left-20 opacity-20">
+          <mat-icon class="text-6xl">flight</mat-icon>
+        </div>
+        <div class="absolute bottom-20 right-20 opacity-20">
+          <mat-icon class="text-6xl">hotel</mat-icon>
+        </div>
+        <div class="absolute top-1/3 right-10 opacity-20">
+          <mat-icon class="text-4xl">luggage</mat-icon>
+        </div>
+        <div class="absolute bottom-1/3 left-10 opacity-20">
+          <mat-icon class="text-4xl">map</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

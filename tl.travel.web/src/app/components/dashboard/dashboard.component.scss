@@ -1,0 +1,205 @@
+// Stats cards styling
+.stats-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.hotel-card {
+  border-left: 4px solid #2563eb;
+}
+
+.client-card {
+  border-left: 4px solid #059669;
+}
+
+.total-card {
+  border-left: 4px solid #7c3aed;
+}
+
+.revenue-card {
+  border-left: 4px solid #ea580c;
+}
+
+// Custom Material Design overrides
+.mat-mdc-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  .mat-mdc-card-content {
+    padding: 1.5rem;
+  }
+}
+
+.mat-mdc-card-header {
+  .mat-mdc-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+  }
+  
+  .mat-mdc-card-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+}
+
+// Button styling
+.mat-mdc-raised-button {
+  &.mat-primary {
+    --mdc-protected-button-container-color: #4f46e5;
+    --mdc-protected-button-label-text-color: white;
+    
+    &:hover {
+      --mdc-protected-button-container-color: #4338ca;
+    }
+  }
+  
+  &.mat-accent {
+    --mdc-protected-button-container-color: #059669;
+    --mdc-protected-button-label-text-color: white;
+    
+    &:hover {
+      --mdc-protected-button-container-color: #047857;
+    }
+  }
+}
+
+.mat-mdc-outlined-button {
+  border-color: #d1d5db;
+  color: #374151;
+  
+  &:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+  }
+}
+
+// Icon styling
+.mat-icon {
+  &.text-2xl {
+    font-size: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  &.text-sm {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+// Loading spinner
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: #4f46e5;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .ml-64 {
+    margin-left: 0;
+  }
+  
+  .fixed.left-0 {
+    display: none;
+  }
+  
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-cols-4,
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .p-8 {
+    padding: 1rem;
+  }
+}
+
+// Animation for cards
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stats-card {
+  animation: slideInUp 0.6s ease-out;
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+}
+
+// Sidebar active state
+.sidebar-item-active {
+  background-color: #4b5563;
+  color: white;
+  
+  .mat-icon {
+    color: white;
+  }
+}
+
+// Quick action buttons
+.h-16 {
+  height: 4rem;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+// Activity items
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+// Background colors for activity icons
+.bg-blue-100 { background-color: #dbeafe; }
+.bg-green-100 { background-color: #dcfce7; }
+.bg-purple-100 { background-color: #f3e8ff; }
+.bg-orange-100 { background-color: #fed7aa; }
+
+// Text colors
+.text-blue-600 { color: #2563eb; }
+.text-green-600 { color: #059669; }
+.text-purple-600 { color: #7c3aed; }
+.text-orange-600 { color: #ea580c; }
+.text-green-500 { color: #10b981; }
+
+// Header styling
+.bg-white.shadow-sm {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+// Welcome section
+.text-3xl {
+  line-height: 1.2;
+}
+
+// User avatar
+.w-8.h-8 {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
