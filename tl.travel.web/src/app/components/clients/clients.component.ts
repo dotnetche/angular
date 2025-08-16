@@ -100,7 +100,7 @@ export class ClientsComponent implements OnInit {
     this.clientsService.getAll(request).subscribe({
       next: (response) => {
         this.dataSource.data = response.data || response.records || [];
-        this.totalCount = response.totalCount || response.totalRecordsCount || 0;
+        this.totalCount = response.totalCount;
         
         // Generate dynamic columns from data
         this.generateDynamicColumns(this.dataSource.data);
@@ -319,13 +319,12 @@ export class ClientsComponent implements OnInit {
 
   // Pagination helpers
   getStartRecord(): number {
-    if (!this.totalCount || this.totalCount === 0) return 0;
+    if (this.totalCount === 0) return 0;
     return this.currentPage * this.pageSize + 1;
   }
 
   getEndRecord(): number {
-    if (!this.totalCount || this.totalCount === 0) return 0;
-    const endRecord = Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
-    return isNaN(endRecord) ? 0 : endRecord;
+    if (this.totalCount === 0) return 0;
+    return Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
   }
 }
