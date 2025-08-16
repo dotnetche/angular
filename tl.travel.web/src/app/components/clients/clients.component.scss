@@ -10,6 +10,8 @@
 }
 
 .mat-mdc-table {
+  min-width: max-content;
+  
   .mat-mdc-header-row {
     height: 56px;
     
@@ -17,6 +19,7 @@
       color: #374151;
       font-weight: 600;
       border-bottom: 1px solid #e5e7eb;
+      white-space: nowrap;
     }
   }
   
@@ -31,8 +34,42 @@
     .mat-mdc-cell {
       border-bottom: 1px solid #f3f4f6;
       color: #374151;
+      white-space: nowrap;
     }
   }
+}
+
+// Responsive table container
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+  
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+    
+    &:hover {
+      background: #94a3b8;
+    }
+  }
+}
+
+// Truncate text with tooltip
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 // Custom button styles
@@ -91,19 +128,7 @@
 }
 
 // Responsive design
-@media (max-width: 768px) {
-  .mat-mdc-table {
-    .mat-mdc-header-cell,
-    .mat-mdc-cell {
-      padding: 8px;
-      font-size: 14px;
-    }
-  }
-  
-  .mat-mdc-form-field {
-    width: 100%;
-  }
-}
+// Removed restrictive mobile styles to allow proper responsive behavior
 
 // Custom scrollbar for table
 .mat-mdc-table-container {

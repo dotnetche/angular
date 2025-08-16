@@ -138,18 +138,19 @@
 
     
     <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
-      <div class="overflow-x-auto min-w-full">
-        <mat-table [dataSource]="dataSource" class="w-full">
+      <div class="overflow-x-auto">
+        <div class="min-w-max">
+          <mat-table [dataSource]="dataSource" class="w-full min-w-max">
         
         <ng-container matColumnDef="select">
-          <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-10">
+          <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200">
             <mat-checkbox 
               (change)="$event ? masterToggle() : null"
               [checked]="selection.hasValue() && isAllSelected()"
               [indeterminate]="selection.hasValue() && !isAllSelected()">
             </mat-checkbox>
           </mat-header-cell>
-          <mat-cell *matCellDef="let row" class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-white !z-10">
+          <mat-cell *matCellDef="let row" class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100">
             <mat-checkbox 
               (click)="$event.stopPropagation()"
               (change)="$event ? selection.toggle(row) : null"
@@ -160,50 +161,58 @@
 
         
         <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px]">Име на стая</mat-header-cell>
-          <mat-cell *matCellDef="let room" class="font-medium">{{ room.name }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[150px] !max-w-[250px] !px-4 !whitespace-nowrap">Име на стая</mat-header-cell>
+          <mat-cell *matCellDef="let room" class="!font-medium !min-w-[150px] !max-w-[250px] !px-4">
+            <div class="truncate" [title]="room.name">{{ room.name }}</div>
+          </mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="hotelName">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px]">Хотел</mat-header-cell>
-          <mat-cell *matCellDef="let room">{{ room.hotelName || 'Не е указан' }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[150px] !max-w-[250px] !px-4 !whitespace-nowrap">Хотел</mat-header-cell>
+          <mat-cell *matCellDef="let room" class="!min-w-[150px] !max-w-[250px] !px-4">
+            <div class="truncate" [title]="room.hotelName || 'Не е указан'">{{ room.hotelName || 'Не е указан' }}</div>
+          </mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="price">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[100px]">Цена</mat-header-cell>
-          <mat-cell *matCellDef="let room" class="text-green-600 font-medium">{{ formatPrice(room.price) }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[100px] !max-w-[150px] !px-4 !whitespace-nowrap">Цена</mat-header-cell>
+          <mat-cell *matCellDef="let room" class="!text-green-600 !font-medium !min-w-[100px] !max-w-[150px] !px-4">
+            <div class="truncate" [title]="formatPrice(room.price)">{{ formatPrice(room.price) }}</div>
+          </mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="maxAdults">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[80px]">Възрастни</mat-header-cell>
-          <mat-cell *matCellDef="let room">{{ room.maxAdults || 0 }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[80px] !max-w-[100px] !px-4 !whitespace-nowrap">Възрастни</mat-header-cell>
+          <mat-cell *matCellDef="let room" class="!min-w-[80px] !max-w-[100px] !px-4">{{ room.maxAdults || 0 }}</mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="maxChildren">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[60px]">Деца</mat-header-cell>
-          <mat-cell *matCellDef="let room">{{ room.maxChildren || 0 }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[60px] !max-w-[80px] !px-4 !whitespace-nowrap">Деца</mat-header-cell>
+          <mat-cell *matCellDef="let room" class="!min-w-[60px] !max-w-[80px] !px-4">{{ room.maxChildren || 0 }}</mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="maxBabies">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[60px]">Бебета</mat-header-cell>
-          <mat-cell *matCellDef="let room">{{ room.maxBabies || 0 }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[60px] !max-w-[80px] !px-4 !whitespace-nowrap">Бебета</mat-header-cell>
+          <mat-cell *matCellDef="let room" class="!min-w-[60px] !max-w-[80px] !px-4">{{ room.maxBabies || 0 }}</mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="description">
-          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[200px]">Описание</mat-header-cell>
-          <mat-cell *matCellDef="let room" class="max-w-xs truncate">{{ room.description || 'Няма описание' }}</mat-cell>
+          <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[200px] !max-w-[300px] !px-4 !whitespace-nowrap">Описание</mat-header-cell>
+          <mat-cell *matCellDef="let room" class="!min-w-[200px] !max-w-[300px] !px-4">
+            <div class="truncate" [title]="room.description || 'Няма описание'">{{ room.description || 'Няма описание' }}</div>
+          </mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef class="w-32 min-w-[120px]"></mat-header-cell>
-          <mat-cell *matCellDef="let room" class="w-32">
+          <mat-header-cell *matHeaderCellDef class="!w-32 !min-w-[120px] !max-w-[120px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"></mat-header-cell>
+          <mat-cell *matCellDef="let room" class="!w-32 !min-w-[120px] !max-w-[120px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100">
             <div class="flex space-x-1">
               <button 
                 mat-icon-button 
@@ -233,6 +242,8 @@
         <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 cursor-pointer"></mat-row>
       </mat-table>
+        </div>
+      </div>
       </div>
 
       

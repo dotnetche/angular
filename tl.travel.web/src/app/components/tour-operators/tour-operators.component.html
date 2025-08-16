@@ -106,18 +106,19 @@
 
     
     <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
-      <div class="overflow-x-auto min-w-full">
-        <mat-table [dataSource]="dataSource" class="w-full">
+      <div class="overflow-x-auto">
+        <div class="min-w-max">
+          <mat-table [dataSource]="dataSource" class="w-full min-w-max">
           
           <ng-container matColumnDef="select">
-            <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-10">
+            <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200">
               <mat-checkbox 
                 (change)="$event ? masterToggle() : null"
                 [checked]="selection.hasValue() && isAllSelected()"
                 [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
             </mat-header-cell>
-            <mat-cell *matCellDef="let row" class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-white !z-10">
+            <mat-cell *matCellDef="let row" class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100">
               <mat-checkbox 
                 (click)="$event.stopPropagation()"
                 (change)="$event ? selection.toggle(row) : null"
@@ -128,20 +129,24 @@
 
           
           <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[200px]">Име на оператор</mat-header-cell>
-            <mat-cell *matCellDef="let operator" class="font-medium">{{ operator.name }}</mat-cell>
+            <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[200px] !max-w-[300px] !px-4 !whitespace-nowrap">Име на оператор</mat-header-cell>
+            <mat-cell *matCellDef="let operator" class="!font-medium !min-w-[200px] !max-w-[300px] !px-4">
+              <div class="truncate" [title]="operator.name">{{ operator.name }}</div>
+            </mat-cell>
           </ng-container>
 
           
           <ng-container matColumnDef="commissionPercent">
-            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px]">Комисионна</mat-header-cell>
-            <mat-cell *matCellDef="let operator" class="text-green-600 font-medium">{{ formatCommission(operator.commissionPercent) }}</mat-cell>
+            <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[120px] !max-w-[150px] !px-4 !whitespace-nowrap">Комисионна</mat-header-cell>
+            <mat-cell *matCellDef="let operator" class="!text-green-600 !font-medium !min-w-[120px] !max-w-[150px] !px-4">
+              <div class="truncate" [title]="formatCommission(operator.commissionPercent)">{{ formatCommission(operator.commissionPercent) }}</div>
+            </mat-cell>
           </ng-container>
 
           
           <ng-container matColumnDef="isActive">
-            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[100px]">Статус</mat-header-cell>
-            <mat-cell *matCellDef="let operator">
+            <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[100px] !max-w-[120px] !px-4 !whitespace-nowrap">Статус</mat-header-cell>
+            <mat-cell *matCellDef="let operator" class="!min-w-[100px] !max-w-[120px] !px-4">
               <span [class]="operator.isActive ? 'text-green-600 bg-green-100 px-2 py-1 rounded-full text-xs' : 'text-red-600 bg-red-100 px-2 py-1 rounded-full text-xs'">
                 {{ getStatusDisplay(operator.isActive) }}
               </span>
@@ -150,8 +155,8 @@
 
           
           <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef class="w-32 min-w-[120px]"></mat-header-cell>
-            <mat-cell *matCellDef="let operator" class="w-32">
+            <mat-header-cell *matHeaderCellDef class="!w-32 !min-w-[120px] !max-w-[120px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"></mat-header-cell>
+            <mat-cell *matCellDef="let operator" class="!w-32 !min-w-[120px] !max-w-[120px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100">
               <div class="flex space-x-1">
                 <button 
                   mat-icon-button 
@@ -181,6 +186,8 @@
           <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 cursor-pointer"></mat-row>
         </mat-table>
+        </div>
+      </div>
       </div>
 
       
