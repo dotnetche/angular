@@ -45,7 +45,6 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     this.currentUserSubject.next(null);
-    }
   }
 
   signIn(credentials: AuthCredentials): Observable<AuthResponse> {
