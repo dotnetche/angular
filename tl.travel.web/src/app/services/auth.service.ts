@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { AuthCredentials, EditOperatorDTO, AuthResponse } from '../models/auth.model';
 import { ApiService } from './api.service';
 
@@ -16,13 +17,34 @@ export class AuthService {
     private http: HttpClient,
     private apiService: ApiService
   ) {
-    // Check if user is already logged in
+    // Initialize user from stored token on app start
+    this.initializeFromStorage();
+  }
+
+  private initializeFromStorage(): void {
     const token = localStorage.getItem('token');
     if (token) {
+      // Try to read token info from server
       this.readToken().subscribe({
-        next: (user) => this.currentUserSubject.next(user),
-        error: () => this.logout()
+        next: (user) => {
+          if (user) {
+            this.currentUserSubject.next(user);
+          }
+        },
+        error: (error) => {
+          console.error('Failed to read token:', error);
+          // If token is invalid, clear it but don't redirect yet
+          // Let the auth guard handle the redirect
+          this.clearTokens();
+        }
       });
+    }
+  }
+
+  private clearTokens(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    this.currentUserSubject.next(null);
     }
   }
 
@@ -57,26 +79,31 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    // Since logout endpoint might not work, just clear local storage
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    this.currentUserSubject.next(null);
+    // Clear tokens first
+    this.clearTokens();
     
     // Try to call logout endpoint, but don't fail if it doesn't work
     return this.apiService.post('/Security/Logout', {}).pipe(
       catchError(() => {
         // Ignore logout endpoint errors
-        return new Observable(observer => observer.complete());
+        return new Observable(observer => {
+          observer.next(null);
+          observer.complete();
+        });
       })
     );
   }
 
   readToken(): Observable<any> {
-    // Only call if authenticated
-    if (this.isAuthenticated()) {
-      return this.apiService.get('/Security/ReadToken');
-    }
-    return new Observable(observer => observer.next(null));
+    return this.apiService.get('/Security/ReadToken').pipe(
+      catchError((error) => {
+        console.error('ReadToken failed:', error);
+        return new Observable(observer => {
+          observer.next(null);
+          observer.complete();
+        });
+      })
+    );
   }
 
   isAuthenticated(): boolean {

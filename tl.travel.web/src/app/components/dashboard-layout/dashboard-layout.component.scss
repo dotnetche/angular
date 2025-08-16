@@ -22,9 +22,28 @@ nav a {
   }
 }
 
+// Ensure proper z-index layering
+.fixed {
+  z-index: 40;
+}
+
+// Prevent content from overlapping
+.ml-64 {
+  position: relative;
+  z-index: 10;
+}
+
+// Ensure router outlet content doesn't interfere with navigation
+router-outlet + * {
+  position: relative;
+  z-index: 1;
+}
+
 // Header styling
 .bg-white.shadow-sm {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 30;
 }
 
 // User avatar

@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-50">
   <!-- Sidebar -->
-  <div class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-10">
+  <div class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-40">
     <div class="p-6">
       <h1 class="text-xl font-bold text-gray-800">TL Travel</h1>
     </div>
@@ -48,7 +48,7 @@
   <!-- Main Content -->
   <div class="ml-64">
     <!-- Header -->
-    <div class="bg-white shadow-sm border-b px-8 py-4 flex justify-between items-center">
+    <div class="bg-white shadow-sm border-b px-8 py-4 flex justify-between items-center relative z-30">
       <div class="flex items-center space-x-4">
         <!-- Breadcrumb will be handled by individual components -->
       </div>
@@ -89,7 +89,7 @@
     </div>
 
     <!-- Content Area -->
-    <div class="flex-1">
+    <div class="flex-1 relative">
       <router-outlet></router-outlet>
     </div>
   </div>
