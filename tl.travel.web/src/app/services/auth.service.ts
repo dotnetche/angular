@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthCredentials, EditOperatorDTO, AuthResponse } from '../models/auth.model';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly baseUrl = 'https://api.example.com'; // Replace with your actual API URL
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private apiService: ApiService
+  ) {
     // Check if user is already logged in
     const token = localStorage.getItem('token');
     if (token) {
@@ -24,7 +27,7 @@ export class AuthService {
   }
 
   signIn(credentials: AuthCredentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/Security/SignIn`, credentials)
+    return this.apiService.post<AuthResponse>('/Security/SignIn', credentials)
       .pipe(
         tap(response => {
           if (response.token) {
@@ -37,7 +40,7 @@ export class AuthService {
   }
 
   signUp(operator: EditOperatorDTO): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/Security/SignUp`, operator)
+    return this.apiService.post<AuthResponse>('/Security/SignUp', operator)
       .pipe(
         tap(response => {
           if (response.token) {
@@ -50,7 +53,7 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/Security/Logout`, {})
+    return this.apiService.post('/Security/Logout', {})
       .pipe(
         tap(() => {
           localStorage.removeItem('token');
@@ -62,7 +65,7 @@ export class AuthService {
 
   refreshToken(): Observable<AuthResponse> {
     const refreshToken = localStorage.getItem('refreshToken');
-    return this.http.post<AuthResponse>(`${this.baseUrl}/Security/RefreshToken`, { refreshToken })
+    return this.apiService.post<AuthResponse>('/Security/RefreshToken', { refreshToken })
       .pipe(
         tap(response => {
           if (response.token) {
@@ -74,11 +77,11 @@ export class AuthService {
   }
 
   readToken(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/Security/ReadToken`);
+    return this.apiService.get('/Security/ReadToken');
   }
 
   getCSRFToken(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/Security/GetCSRFToken`);
+    return this.apiService.get('/Security/GetCSRFToken');
   }
 
   isAuthenticated(): boolean {
