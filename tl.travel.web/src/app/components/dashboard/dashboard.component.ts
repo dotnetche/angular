@@ -51,6 +51,12 @@ export class DashboardComponent implements OnInit {
   loadStatistics(): void {
     this.isLoading = true;
 
+    // Only load statistics if user is authenticated
+    if (!this.authService.isAuthenticated()) {
+      this.isLoading = false;
+      return;
+    }
+
     // Load hotel reservations count
     this.statisticsService.getHotelsReservationsCount().subscribe({
       next: (data) => {
@@ -60,6 +66,7 @@ export class DashboardComponent implements OnInit {
       error: (error) => {
         console.error('Error loading hotel reservations:', error);
         this.hotelReservations = { count: 0, label: 'Резервации на хотели' };
+        this.showSnackBar('Грешка при зареждане на статистиките');
         this.checkLoadingComplete();
       }
     });
@@ -73,6 +80,7 @@ export class DashboardComponent implements OnInit {
       error: (error) => {
         console.error('Error loading client reservations:', error);
         this.clientReservations = { count: 0, label: 'Резервации на клиенти' };
+        this.showSnackBar('Грешка при зареждане на статистиките');
         this.checkLoadingComplete();
       }
     });
