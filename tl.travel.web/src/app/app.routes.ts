@@ -21,5 +21,9 @@ export const routes: Routes = [
   {
     path: 'feeding-types',
     loadComponent: () => import('./components/feeding-types/feeding-types.component').then(m => m.FeedingTypesComponent)
+  },
+  {
+    path: 'tour-operators',
+    loadComponent: () => import('./components/tour-operators/tour-operators.component').then(m => m.TourOperatorsComponent)
   }
 ];
