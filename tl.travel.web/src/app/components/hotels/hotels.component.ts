@@ -216,7 +216,6 @@ export class HotelsComponent implements OnInit {
     
     return value.toString();
   }
-  loadLocations(): void {
   getColumnClass(column: string): string {
     const classMap: { [key: string]: string } = {
       'name': 'font-medium',
@@ -226,6 +225,7 @@ export class HotelsComponent implements OnInit {
     
     return classMap[column] || '';
   }
+  loadLocations(): void {
 
     this.hotelsService.getAllLocations().subscribe({
       next: (locations) => {
