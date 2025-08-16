@@ -10,11 +10,11 @@ export class StatisticsService {
 
   constructor(private apiService: ApiService) {}
 
-  getHotelsReservationsCount(): Observable<StatisticsResponse> {
-    return this.apiService.get<StatisticsResponse>('/Statistics/GetHotelsReservationsCount');
+  getHotelsReservationsCount(): Observable<StatisticsResponse[]> {
+    return this.apiService.get<StatisticsResponse[]>('/Statistics/GetHotelsReservationsCount');
   }
 
-  getClientsReservationsCount(): Observable<StatisticsResponse> {
-    return this.apiService.get<StatisticsResponse>('/Statistics/GetClientsReservationsCount');
+  getClientsReservationsCount(): Observable<StatisticsResponse[]> {
+    return this.apiService.get<StatisticsResponse[]>('/Statistics/GetClientsReservationsCount');
   }
 }

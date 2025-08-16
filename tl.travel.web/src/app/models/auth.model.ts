@@ -25,6 +25,6 @@ export interface AuthResponse {
 }
 
 export interface StatisticsResponse {
-  count: number;
-  label: string;
+  name: string;
+  value: number;
 }
