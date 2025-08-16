@@ -236,7 +236,7 @@ export class FeedingTypesComponent implements OnInit {
   }
 
   getEndRecord(): number {
-    if this.totalCount === 0) return 0;
+    if (this.totalCount === 0) return 0;
     return Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
   }
 }
