@@ -106,18 +106,18 @@
 
     
     <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
-      <div class="overflow-x-auto">
-        <mat-table [dataSource]="dataSource" class="w-full min-w-full">
+      <div class="overflow-x-auto min-w-full">
+        <mat-table [dataSource]="dataSource" class="w-full">
           
           <ng-container matColumnDef="select">
-            <mat-header-cell *matHeaderCellDef class="w-12 min-w-[48px] flex-shrink-0">
+            <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-10">
               <mat-checkbox 
                 (change)="$event ? masterToggle() : null"
                 [checked]="selection.hasValue() && isAllSelected()"
                 [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
             </mat-header-cell>
-            <mat-cell *matCellDef="let row" class="w-12 min-w-[48px] flex-shrink-0">
+            <mat-cell *matCellDef="let row" class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-white !z-10">
               <mat-checkbox 
                 (click)="$event.stopPropagation()"
                 (change)="$event ? selection.toggle(row) : null"
@@ -210,7 +210,7 @@
       <div class="border-t bg-gray-50 px-4 sm:px-6 py-3">
         <div class="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
           <div class="text-sm text-gray-600">
-            От {{ currentPage * pageSize + 1 }} до {{ math.min((currentPage + 1) * pageSize, totalCount) }} от {{ totalCount }} резултата
+            От {{ getStartRecord() }} до {{ getEndRecord() }} от {{ totalCount }} резултата
           </div>
           
           <mat-paginator

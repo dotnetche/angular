@@ -265,4 +265,15 @@ export class HotelRoomsComponent implements OnInit {
     }
     return '';
   }
+
+  // Pagination helpers
+  getStartRecord(): number {
+    if (this.totalCount === 0) return 0;
+    return this.currentPage * this.pageSize + 1;
+  }
+
+  getEndRecord(): number {
+    if (this.totalCount === 0) return 0;
+    return Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
+  }
 }
