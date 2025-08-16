@@ -28,8 +28,8 @@ export class DashboardComponent implements OnInit {
   isLoading = true;
   currentUser: any = null;
   
-  hotelReservations: StatisticsResponse = { count: 0, label: 'Резервации на хотели' };
-  clientReservations: StatisticsResponse = { count: 0, label: 'Резервации на клиенти' };
+  hotelReservationsCount = 0;
+  clientReservationsCount = 0;
 
   constructor(
     private statisticsService: StatisticsService,
@@ -60,12 +60,13 @@ export class DashboardComponent implements OnInit {
     // Load hotel reservations count
     this.statisticsService.getHotelsReservationsCount().subscribe({
       next: (data) => {
-        this.hotelReservations = data;
+        // Sum all values from the array
+        this.hotelReservationsCount = data.reduce((sum, item) => sum + (item.value || 0), 0);
         this.checkLoadingComplete();
       },
       error: (error) => {
         console.error('Error loading hotel reservations:', error);
-        this.hotelReservations = { count: 0, label: 'Резервации на хотели' };
+        this.hotelReservationsCount = 0;
         this.showSnackBar('Грешка при зареждане на статистиките');
         this.checkLoadingComplete();
       }
@@ -74,12 +75,13 @@ export class DashboardComponent implements OnInit {
     // Load client reservations count
     this.statisticsService.getClientsReservationsCount().subscribe({
       next: (data) => {
-        this.clientReservations = data;
+        // Sum all values from the array
+        this.clientReservationsCount = data.reduce((sum, item) => sum + (item.value || 0), 0);
         this.checkLoadingComplete();
       },
       error: (error) => {
         console.error('Error loading client reservations:', error);
-        this.clientReservations = { count: 0, label: 'Резервации на клиенти' };
+        this.clientReservationsCount = 0;
         this.showSnackBar('Грешка при зареждане на статистиките');
         this.checkLoadingComplete();
       }
@@ -107,7 +109,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getTotalReservations(): number {
-    return this.hotelReservations.count + this.clientReservations.count;
+    return this.hotelReservationsCount + this.clientReservationsCount;
   }
 
   getWelcomeMessage(): string {

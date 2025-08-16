@@ -99,7 +99,7 @@ export class TourOperatorsComponent implements OnInit {
     this.tourOperatorsService.getAll(request).subscribe({
       next: (response) => {
         this.dataSource.data = response.data || response.records || [];
-        this.totalCount = response.totalCount;
+        this.totalCount = response.totalCount || response.totalRecordsCount || 0;
         this.isLoading = false;
         
         // Clear selection when data changes
@@ -251,12 +251,13 @@ export class TourOperatorsComponent implements OnInit {
 
   // Pagination helpers
   getStartRecord(): number {
-    if (this.totalCount === 0) return 0;
+    if (!this.totalCount || this.totalCount === 0) return 0;
     return this.currentPage * this.pageSize + 1;
   }
 
   getEndRecord(): number {
-    if (this.totalCount === 0) return 0;
-    return Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
+    if (!this.totalCount || this.totalCount === 0) return 0;
+    const endRecord = Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
+    return isNaN(endRecord) ? 0 : endRecord;
   }
 }
