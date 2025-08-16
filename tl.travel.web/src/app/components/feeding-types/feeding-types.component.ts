@@ -95,7 +95,7 @@ export class FeedingTypesComponent implements OnInit {
 
     this.feedingTypesService.getAll(request).subscribe({
       next: (response) => {
-        this.dataSource.data = response.data;
+        this.dataSource.data = response.data || response.records || [];
         this.totalCount = response.totalCount;
         this.isLoading = false;
         

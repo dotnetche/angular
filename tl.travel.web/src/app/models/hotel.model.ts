@@ -29,8 +29,10 @@ export interface BaseGridRequestModel {
 }
 
 export interface GridResponse<T> {
-  data: T[];
+  data?: T[];
+  records?: T[];
   totalCount: number;
+  totalRecordsCount?: number;
   page: number;
   pageSize: number;
 }

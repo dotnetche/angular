@@ -99,11 +99,11 @@ export class ClientsComponent implements OnInit {
 
     this.clientsService.getAll(request).subscribe({
       next: (response) => {
-        this.dataSource.data = response.data;
+        this.dataSource.data = response.data || response.records || [];
         this.totalCount = response.totalCount;
         
         // Generate dynamic columns from data
-        this.generateDynamicColumns(response.data);
+        this.generateDynamicColumns(this.dataSource.data);
         
         this.isLoading = false;
         

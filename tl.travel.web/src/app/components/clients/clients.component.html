@@ -182,14 +182,14 @@
       @if (!isLoading && dataSource.data.length === 0) {
         <div class="text-center py-12 px-4">
           <mat-icon class="text-gray-400 text-6xl mb-4">people_outline</mat-icon>
-          <h3 class="text-lg font-medium text-gray-600 mb-2">Няма намерени клиенти</h3>
-          <p class="text-gray-500 mb-4">Започнете като добавите първия си клиент</p>
+          <h3 class="text-lg font-medium text-gray-600 mb-2">Няма намерени записи</h3>
+          <p class="text-gray-500 mb-4">Започнете като добавите първия запис</p>
           <button 
             mat-raised-button 
             color="primary"
             (click)="showAddClientForm()"
             class="bg-gray-600 hover:bg-gray-700">
-            Добави клиент
+            Добави запис
           </button>
         </div>
       }
