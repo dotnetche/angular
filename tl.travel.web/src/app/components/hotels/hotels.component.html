@@ -1,5 +1,5 @@
 <!-- Header Breadcrumb -->
-<div class="bg-white shadow-sm border-b px-8 py-4 flex justify-between items-center">
+<div class="bg-white shadow-sm border-b px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
   <div class="flex items-center space-x-4">
     <span class="text-gray-600">Хотели</span>
     @if (showAddForm) {
@@ -9,15 +9,16 @@
 </div>
 
 <!-- Main Content -->
+<div class="p-4 sm:p-6 lg:p-8 max-w-full">
 @if (showAddForm) {
-  <div class="bg-white m-8 rounded-lg shadow-sm border">
-    <div class="px-8 py-6 border-b">
+  <div class="bg-white rounded-lg shadow-sm border max-w-4xl mx-auto">
+    <div class="px-4 sm:px-6 lg:px-8 py-6 border-b">
       <h2 class="text-xl font-semibold text-gray-800">
         {{ isEditing ? 'Редактиране на хотел' : 'Добави хотел' }}
       </h2>
     </div>
     
-    <form [formGroup]="hotelForm" class="p-8 space-y-6">
+    <form [formGroup]="hotelForm" class="p-4 sm:p-6 lg:p-8 space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         <mat-form-field class="w-full">
@@ -75,14 +76,14 @@
       </div>
 
       
-      <div class="flex space-x-4 pt-4">
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 pt-4">
         <button 
           mat-raised-button 
           color="primary" 
           type="button"
           (click)="saveHotel()"
           [disabled]="!hotelForm.valid || isLoading"
-          class="bg-gray-600 hover:bg-gray-700">
+          class="bg-gray-600 hover:bg-gray-700 w-full sm:w-auto">
           {{ isEditing ? 'Обнови' : 'Добави' }}
         </button>
         
@@ -92,7 +93,7 @@
             type="button"
             (click)="saveAndAddAnother()"
             [disabled]="!hotelForm.valid || isLoading"
-            class="bg-gray-500 hover:bg-gray-600 text-white">
+            class="bg-gray-500 hover:bg-gray-600 text-white w-full sm:w-auto">
             Добави и добави друг
           </button>
         }
@@ -101,7 +102,7 @@
           mat-button 
           type="button"
           (click)="cancelForm()"
-          class="text-gray-600 hover:text-gray-800">
+          class="text-gray-600 hover:text-gray-800 w-full sm:w-auto">
           Отказ
         </button>
       </div>
@@ -110,15 +111,14 @@
 }
 
 @if (!showAddForm) {
-  <div class="m-8">
     
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
       <h1 class="text-2xl font-bold text-gray-800">Хотели</h1>
       <button 
         mat-raised-button 
         color="primary"
         (click)="showAddHotelForm()"
-        class="bg-gray-600 hover:bg-gray-700">
+        class="bg-gray-600 hover:bg-gray-700 w-full sm:w-auto">
         <mat-icon class="mr-2">add</mat-icon>
         Добави хотел
       </button>
@@ -126,7 +126,7 @@
 
     
     <div class="bg-white rounded-lg shadow-sm border mb-6">
-      <div class="p-6">
+      <div class="p-4 sm:p-6">
         <form [formGroup]="searchForm" class="flex items-center space-x-4">
           <mat-form-field class="flex-1">
             <mat-label>Търсене</mat-label>
@@ -139,7 +139,8 @@
 
     
     <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
-      <mat-table [dataSource]="dataSource" class="w-full">
+      <div class="overflow-x-auto">
+        <mat-table [dataSource]="dataSource" class="w-full min-w-full">
         
         <ng-container matColumnDef="select">
           <mat-header-cell *matHeaderCellDef class="w-12">
@@ -160,37 +161,37 @@
 
         
         <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef class="font-semibold">Име на хотел</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[200px]">Име на хотел</mat-header-cell>
           <mat-cell *matCellDef="let hotel" class="font-medium">{{ hotel.name }}</mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="stars">
-          <mat-header-cell *matHeaderCellDef class="font-semibold">Категория</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[100px]">Категория</mat-header-cell>
           <mat-cell *matCellDef="let hotel" class="text-yellow-600">{{ getStarsDisplay(hotel.stars) }}</mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="locationName">
-          <mat-header-cell *matHeaderCellDef class="font-semibold">Локация</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px]">Локация</mat-header-cell>
           <mat-cell *matCellDef="let hotel">{{ hotel.locationName || 'Не е указана' }}</mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="partnerName">
-          <mat-header-cell *matHeaderCellDef class="font-semibold">Партньор</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px]">Партньор</mat-header-cell>
           <mat-cell *matCellDef="let hotel">{{ hotel.partnerName || 'Не е указан' }}</mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="contacts">
-          <mat-header-cell *matHeaderCellDef class="font-semibold">Контакти</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[200px]">Контакти</mat-header-cell>
           <mat-cell *matCellDef="let hotel" class="max-w-xs truncate">{{ hotel.contacts }}</mat-cell>
         </ng-container>
 
         
         <ng-container matColumnDef="isTemporaryClosed">
-          <mat-header-cell *matHeaderCellDef class="font-semibold">Статус</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[100px]">Статус</mat-header-cell>
           <mat-cell *matCellDef="let hotel">
             <span [class]="hotel.isTemporaryClosed ? 'text-red-600 bg-red-100 px-2 py-1 rounded-full text-xs' : 'text-green-600 bg-green-100 px-2 py-1 rounded-full text-xs'">
               {{ getStatusDisplay(hotel.isTemporaryClosed) }}
@@ -200,9 +201,9 @@
 
         
         <ng-container matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef class="w-32"></mat-header-cell>
+          <mat-header-cell *matHeaderCellDef class="w-32 min-w-[120px]"></mat-header-cell>
           <mat-cell *matCellDef="let hotel" class="w-32">
-            <div class="flex space-x-2">
+            <div class="flex space-x-1">
               <button 
                 mat-icon-button 
                 (click)="editHotel(hotel)"
@@ -231,6 +232,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 cursor-pointer"></mat-row>
       </mat-table>
+      </div>
 
       
       @if (isLoading) {
@@ -241,7 +243,7 @@
 
       
       @if (!isLoading && dataSource.data.length === 0) {
-        <div class="text-center py-12">
+        <div class="text-center py-12 px-4">
           <mat-icon class="text-gray-400 text-6xl mb-4">hotel</mat-icon>
           <h3 class="text-lg font-medium text-gray-600 mb-2">Няма намерени хотели</h3>
           <p class="text-gray-500 mb-4">Започнете като добавите първия си хотел</p>
@@ -256,8 +258,8 @@
       }
 
       
-      <div class="border-t bg-gray-50 px-6 py-3">
-        <div class="flex items-center justify-between">
+      <div class="border-t bg-gray-50 px-4 sm:px-6 py-3">
+        <div class="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
           <div class="text-sm text-gray-600">
             От {{ currentPage * pageSize + 1 }} до {{ math.min((currentPage + 1) * pageSize, totalCount) }} от {{ totalCount }} резултата
           </div>
@@ -273,5 +275,5 @@
         </div>
       </div>
     </div>
-  </div>
 }
+</div>
