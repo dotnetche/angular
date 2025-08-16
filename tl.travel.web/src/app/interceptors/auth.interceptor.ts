@@ -2,20 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Get the auth token from localStorage
-    const token = this.authService.getToken();
+    const token = localStorage.getItem('token');
     
     // Clone the request and add the authorization header if token exists
     let authReq = req;
@@ -35,7 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
           // Clear local storage and redirect to login
           localStorage.removeItem('token');
           localStorage.removeItem('refreshToken');
-          this.router.navigate(['/login']);
+          window.location.href = '/login';
         }
         
         // For other errors, just pass them through

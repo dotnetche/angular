@@ -24,20 +24,9 @@ export class AuthService {
   private initializeFromStorage(): void {
     const token = localStorage.getItem('token');
     if (token) {
-      // Try to read token info from server
-      this.readToken().subscribe({
-        next: (user) => {
-          if (user) {
-            this.currentUserSubject.next(user);
-          }
-        },
-        error: (error) => {
-          console.error('Failed to read token:', error);
-          // If token is invalid, clear it but don't redirect yet
-          // Let the auth guard handle the redirect
-          this.clearTokens();
-        }
-      });
+      // For now, just assume token is valid if it exists
+      // The interceptor will handle invalid tokens with 401 responses
+      this.currentUserSubject.next({ token: token });
     }
   }
 
