@@ -58,6 +58,7 @@ export class PaymentTypesComponent implements OnInit {
   pageSizeOptions = [10, 25, 50, 100];
 
   expandedRows = new Set<number>();
+  hiddenRows = new Set<number>();
 
   constructor(
     private fb: FormBuilder,
@@ -254,5 +255,21 @@ export class PaymentTypesComponent implements OnInit {
 
   isRowExpanded(paymentType: PaymentTypeDTO): boolean {
     return paymentType.id ? this.expandedRows.has(paymentType.id) : false;
+  }
+
+  hideRow(paymentType: PaymentTypeDTO): void {
+    if (paymentType.id) {
+      this.hiddenRows.add(paymentType.id);
+      // Also remove from selection if hidden
+      this.selection.deselect(paymentType);
+    }
+  }
+
+  isRowHidden(paymentType: PaymentTypeDTO): boolean {
+    return paymentType.id ? this.hiddenRows.has(paymentType.id) : false;
+  }
+
+  showAllRows(): void {
+    this.hiddenRows.clear();
   }
 }

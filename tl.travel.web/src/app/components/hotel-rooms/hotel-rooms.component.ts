@@ -62,6 +62,7 @@ export class HotelRoomsComponent implements OnInit {
   hotels: HotelDTO[] = [];
 
   expandedRows = new Set<number>();
+  hiddenRows = new Set<number>();
 
   constructor(
     private fb: FormBuilder,
@@ -292,5 +293,25 @@ export class HotelRoomsComponent implements OnInit {
 
   isRowExpanded(room: HotelRoomDTO): boolean {
     return room.id ? this.expandedRows.has(room.id) : false;
+  }
+
+  hideRow(room: HotelRoomDTO): void {
+    if (room.id) {
+      this.hiddenRows.add(room.id);
+      // Also remove from selection if hidden
+      this.selection.deselect(room);
+    }
+  }
+
+  isRowHidden(room: HotelRoomDTO): boolean {
+    return room.id ? this.hiddenRows.has(room.id) : false;
+  }
+
+  showAllRows(): void {
+    this.hiddenRows.clear();
+  }
+
+  compareById(o1: any, o2: any): boolean {
+    return o1 === o2;
   }
 }

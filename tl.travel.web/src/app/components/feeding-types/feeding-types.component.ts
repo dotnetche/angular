@@ -58,6 +58,7 @@ export class FeedingTypesComponent implements OnInit {
   pageSizeOptions = [10, 25, 50, 100];
 
   expandedRows = new Set<number>();
+  hiddenRows = new Set<number>();
 
   constructor(
     private fb: FormBuilder,
@@ -255,5 +256,21 @@ export class FeedingTypesComponent implements OnInit {
 
   isRowExpanded(feedingType: FeedingTypeDTO): boolean {
     return feedingType.id ? this.expandedRows.has(feedingType.id) : false;
+  }
+
+  hideRow(feedingType: FeedingTypeDTO): void {
+    if (feedingType.id) {
+      this.hiddenRows.add(feedingType.id);
+      // Also remove from selection if hidden
+      this.selection.deselect(feedingType);
+    }
+  }
+
+  isRowHidden(feedingType: FeedingTypeDTO): boolean {
+    return feedingType.id ? this.hiddenRows.has(feedingType.id) : false;
+  }
+
+  showAllRows(): void {
+    this.hiddenRows.clear();
   }
 }

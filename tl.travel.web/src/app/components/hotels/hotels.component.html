@@ -40,8 +40,8 @@
 
         <mat-form-field class="w-full">
           <mat-label>Локация</mat-label>
-          <mat-select formControlName="locationId">
-            <mat-option [value]="null">Изберете локация</mat-option>
+          <mat-select formControlName="locationId" [compareWith]="compareById">
+            <mat-option>Изберете локация</mat-option>
             <mat-option *ngFor="let location of locations" [value]="location.id">
               {{ location.name }}
             </mat-option>
@@ -50,8 +50,8 @@
 
         <mat-form-field class="w-full">
           <mat-label>Партньор</mat-label>
-          <mat-select formControlName="partnerId">
-            <mat-option [value]="null">Изберете партньор</mat-option>
+          <mat-select formControlName="partnerId" [compareWith]="compareById">
+            <mat-option>Изберете партньор</mat-option>
             <mat-option *ngFor="let partner of partners" [value]="partner.id">
               {{ partner.name }}
             </mat-option>
@@ -197,6 +197,13 @@
               <div class="flex space-x-1">
                 <button
                   mat-icon-button
+                 (click)="hideRow(hotel)"
+                 class="text-gray-600 hover:text-orange-600"
+                 matTooltip="Скрий ред">
+                 <mat-icon>visibility_off</mat-icon>
+               </button>
+               <button
+                 mat-icon-button
                   (click)="toggleRowExpansion(hotel)"
                   class="text-gray-600 hover:text-blue-600"
                   matTooltip="Покажи/Скрий детайли"
@@ -219,16 +226,27 @@
                 >
                   <mat-icon>delete</mat-icon>
                 </button>
-              </div>
-            </mat-cell>
-          </ng-container>
-
-          <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
-          <mat-row
-            *matRowDef="let row; columns: displayedColumns"
-            class="hover:bg-gray-50 cursor-pointer"
-          ></mat-row>
-        </mat-table>
+        <div class="flex items-center justify-between space-x-4">
+          <form [formGroup]="searchForm" class="flex-1">
+            <mat-form-field class="w-full">
+              <mat-label>Търсене</mat-label>
+              <input
+                matInput
+                formControlName="searchTerm"
+                placeholder="Търсене по име, локация или партньор"
+              />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </form>
+          <button 
+            mat-stroked-button 
+            (click)="showAllRows()"
+            [disabled]="hiddenRows.size === 0"
+            class="whitespace-nowrap">
+            <mat-icon class="mr-2">visibility</mat-icon>
+            Покажи всички ({{ hiddenRows.size }})
+          </button>
+        </div>
       </div>
     </div>
   </div>
