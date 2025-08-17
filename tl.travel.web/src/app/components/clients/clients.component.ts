@@ -198,6 +198,7 @@ export class ClientsComponent implements OnInit {
     
     return value.toString();
   }
+  
   onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
@@ -347,4 +348,5 @@ export class ClientsComponent implements OnInit {
   }
 
   hideRow(client: ClientDTO): void {
+  }
 }
