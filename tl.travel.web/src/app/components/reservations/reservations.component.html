@@ -290,14 +290,14 @@
           <mat-table [dataSource]="dataSource" class="w-full min-w-max">
             <!-- Selection Column -->
             <ng-container matColumnDef="select">
-              <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200">
+              <mat-header-cell *matHeaderCellDef class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-gray-100 z-20 border-r border-gray-200">
                 <mat-checkbox 
                   (change)="$event ? masterToggle() : null"
                   [checked]="selection.hasValue() && isAllSelected()"
                   [indeterminate]="selection.hasValue() && !isAllSelected()">
                 </mat-checkbox>
               </mat-header-cell>
-              <mat-cell *matCellDef="let row" class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100">
+              <mat-cell *matCellDef="let row" class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-white z-20 border-r border-gray-100">
                 <mat-checkbox 
                   (click)="$event.stopPropagation()"
                   (change)="$event ? selection.toggle(row) : null"
@@ -308,8 +308,8 @@
 
             <!-- Hotel Name Column -->
             <ng-container matColumnDef="hotelName">
-              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[150px] !max-w-[250px] !px-4 !whitespace-nowrap">Хотел</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="!font-medium !min-w-[150px] !max-w-[250px] !px-4">
+              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[250px] px-4 whitespace-nowrap">Хотел</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="font-medium min-w-[150px] max-w-[250px] px-4">
                 <div class="truncate" [title]="reservation.hotelName || 'Не е указан'">
                   {{ reservation.hotelName || 'Не е указан' }}
                 </div>
@@ -318,8 +318,8 @@
 
             <!-- Client Name Column -->
             <ng-container matColumnDef="clientName">
-              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[150px] !max-w-[250px] !px-4 !whitespace-nowrap">Клиент</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="!min-w-[150px] !max-w-[250px] !px-4">
+              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[250px] px-4 whitespace-nowrap">Клиент</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="min-w-[150px] max-w-[250px] px-4">
                 <div class="truncate" [title]="reservation.clientName || 'Не е указан'">
                   {{ reservation.clientName || 'Не е указан' }}
                 </div>
@@ -328,8 +328,8 @@
 
             <!-- Operator Name Column -->
             <ng-container matColumnDef="operatorName">
-              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[150px] !max-w-[250px] !px-4 !whitespace-nowrap">Оператор</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="!min-w-[150px] !max-w-[250px] !px-4">
+              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[250px] px-4 whitespace-nowrap">Оператор</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="min-w-[150px] max-w-[250px] px-4">
                 <div class="truncate" [title]="reservation.operatorName || 'Не е указан'">
                   {{ reservation.operatorName || 'Не е указан' }}
                 </div>
@@ -338,32 +338,32 @@
 
             <!-- Date From Column -->
             <ng-container matColumnDef="dateFrom">
-              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[120px] !max-w-[150px] !px-4 !whitespace-nowrap">Дата от</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="!min-w-[120px] !max-w-[150px] !px-4">
+              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px] max-w-[150px] px-4 whitespace-nowrap">Дата от</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="min-w-[120px] max-w-[150px] px-4">
                 {{ formatDate(reservation.dateFrom) }}
               </mat-cell>
             </ng-container>
 
             <!-- Date To Column -->
             <ng-container matColumnDef="dateTo">
-              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[120px] !max-w-[150px] !px-4 !whitespace-nowrap">Дата до</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="!min-w-[120px] !max-w-[150px] !px-4">
+              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px] max-w-[150px] px-4 whitespace-nowrap">Дата до</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="min-w-[120px] max-w-[150px] px-4">
                 {{ formatDate(reservation.dateTo) }}
               </mat-cell>
             </ng-container>
 
             <!-- Total Price Column -->
             <ng-container matColumnDef="totalPrice">
-              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[120px] !max-w-[150px] !px-4 !whitespace-nowrap">Обща цена</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="!text-green-600 !font-medium !min-w-[120px] !max-w-[150px] !px-4">
+              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px] max-w-[150px] px-4 whitespace-nowrap">Обща цена</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="text-green-600 font-medium min-w-[120px] max-w-[150px] px-4">
                 {{ formatPrice(reservation.totalPrice) }}
               </mat-cell>
             </ng-container>
 
             <!-- Status Column -->
             <ng-container matColumnDef="reservationStatusName">
-              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[120px] !max-w-[150px] !px-4 !whitespace-nowrap">Статус</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="!min-w-[120px] !max-w-[150px] !px-4">
+              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px] max-w-[150px] px-4 whitespace-nowrap">Статус</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="min-w-[120px] max-w-[150px] px-4">
                 <span class="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
                   {{ reservation.reservationStatusName || 'Не е указан' }}
                 </span>
@@ -372,15 +372,15 @@
 
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
-              <mat-header-cell *matHeaderCellDef class="!w-32 !min-w-[150px] !max-w-[150px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"></mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="!w-32 !min-w-[150px] !max-w-[150px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100">
+              <mat-header-cell *matHeaderCellDef class="w-32 min-w-[150px] max-w-[150px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="w-32 min-w-[150px] max-w-[150px] sticky right-0 bg-white z-10 border-l border-gray-100">
                 <div class="flex space-x-1">
                   <button 
                     mat-icon-button 
-                    (click)="editReservation(reservation)"
+                    (click)="toggleRowExpansion(reservation)"
                     class="text-gray-600 hover:text-blue-600"
-                    matTooltip="Преглед">
-                    <mat-icon>visibility</mat-icon>
+                    matTooltip="Покажи/Скрий детайли">
+                    <mat-icon>{{ isRowExpanded(reservation) ? 'expand_less' : 'expand_more' }}</mat-icon>
                   </button>
                   <button 
                     mat-icon-button 
@@ -400,7 +400,7 @@
               </mat-cell>
             </ng-container>
 
-            <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></mat-header-row>
+            <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 cursor-pointer"></mat-row>
           </mat-table>
         </div>
