@@ -12,11 +12,11 @@
 // Custom button styles
 .mat-mdc-raised-button {
   &.mat-primary {
-    --mdc-protected-button-container-color: #4f46e5;
+    --mdc-protected-button-container-color: #059669;
     --mdc-protected-button-label-text-color: white;
     
     &:hover {
-      --mdc-protected-button-container-color: #4338ca;
+      --mdc-protected-button-container-color: #047857;
     }
     
     &:disabled {
@@ -28,11 +28,12 @@
 
 .mat-mdc-outlined-button {
   &.mat-primary {
-    --mdc-outlined-button-outline-color: #a5b4fc;
-    --mdc-outlined-button-label-text-color: #4f46e5;
+    --mdc-outlined-button-outline-color: #10b981;
+    --mdc-outlined-button-label-text-color: #059669;
+    --mdc-outlined-button-container-color: #ecfdf5;
     
     &:hover {
-      --mdc-outlined-button-container-color: #eef2ff;
+      --mdc-outlined-button-container-color: #d1fae5;
     }
   }
 }
@@ -45,7 +46,7 @@
   
   &.mat-focused {
     .mat-mdc-form-field-outline-thick {
-      color: #4f46e5;
+      color: #059669;
     }
   }
 }

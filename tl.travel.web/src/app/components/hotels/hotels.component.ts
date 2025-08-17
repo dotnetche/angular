@@ -66,6 +66,8 @@ export class HotelsComponent implements OnInit {
   partners: PartnerDTO[] = [];
   starsOptions = [1, 2, 3, 4, 5];
 
+  expandedRows = new Set<number>();
+
   constructor(
     private fb: FormBuilder,
     private hotelsService: HotelsService,
@@ -388,5 +390,19 @@ export class HotelsComponent implements OnInit {
     if (!this.totalCount || this.totalCount === 0) return 0;
     const endRecord = Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
     return isNaN(endRecord) ? 0 : endRecord;
+  }
+
+  toggleRowExpansion(hotel: HotelDTO): void {
+    if (hotel.id) {
+      if (this.expandedRows.has(hotel.id)) {
+        this.expandedRows.delete(hotel.id);
+      } else {
+        this.expandedRows.add(hotel.id);
+      }
+    }
+  }
+
+  isRowExpanded(hotel: HotelDTO): boolean {
+    return hotel.id ? this.expandedRows.has(hotel.id) : false;
   }
 }

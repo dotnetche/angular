@@ -61,6 +61,8 @@ export class HotelRoomsComponent implements OnInit {
 
   hotels: HotelDTO[] = [];
 
+  expandedRows = new Set<number>();
+
   constructor(
     private fb: FormBuilder,
     private hotelRoomsService: HotelRoomsService,
@@ -276,5 +278,19 @@ export class HotelRoomsComponent implements OnInit {
     if (!this.totalCount || this.totalCount === 0) return 0;
     const endRecord = Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
     return isNaN(endRecord) ? 0 : endRecord;
+  }
+
+  toggleRowExpansion(room: HotelRoomDTO): void {
+    if (room.id) {
+      if (this.expandedRows.has(room.id)) {
+        this.expandedRows.delete(room.id);
+      } else {
+        this.expandedRows.add(room.id);
+      }
+    }
+  }
+
+  isRowExpanded(room: HotelRoomDTO): boolean {
+    return room.id ? this.expandedRows.has(room.id) : false;
   }
 }

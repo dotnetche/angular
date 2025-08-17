@@ -60,6 +60,8 @@ export class ClientsComponent implements OnInit {
   currentPage = 0;
   pageSizeOptions = [10, 25, 50, 100];
 
+  expandedRows = new Set<number>();
+
   constructor(
     private fb: FormBuilder,
     private clientsService: ClientsService,
@@ -327,5 +329,19 @@ export class ClientsComponent implements OnInit {
     if (!this.totalCount || this.totalCount === 0) return 0;
     const endRecord = Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
     return isNaN(endRecord) ? 0 : endRecord;
+  }
+
+  toggleRowExpansion(client: ClientDTO): void {
+    if (client.id) {
+      if (this.expandedRows.has(client.id)) {
+        this.expandedRows.delete(client.id);
+      } else {
+        this.expandedRows.add(client.id);
+      }
+    }
+  }
+
+  isRowExpanded(client: ClientDTO): boolean {
+    return client.id ? this.expandedRows.has(client.id) : false;
   }
 }

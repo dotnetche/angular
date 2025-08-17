@@ -111,14 +111,14 @@
           <mat-table [dataSource]="dataSource" class="w-full min-w-max">
           
           <ng-container matColumnDef="select">
-            <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200">
+            <mat-header-cell *matHeaderCellDef class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-gray-100 z-20 border-r border-gray-200">
               <mat-checkbox 
                 (change)="$event ? masterToggle() : null"
                 [checked]="selection.hasValue() && isAllSelected()"
                 [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
             </mat-header-cell>
-            <mat-cell *matCellDef="let row" class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100">
+            <mat-cell *matCellDef="let row" class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-white z-20 border-r border-gray-100">
               <mat-checkbox 
                 (click)="$event.stopPropagation()"
                 (change)="$event ? selection.toggle(row) : null"
@@ -129,10 +129,10 @@
 
           <!-- Dynamic Columns -->
           <ng-container *ngFor="let column of dynamicColumns" [matColumnDef]="column">
-            <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[150px] !max-w-[300px] !px-4 !whitespace-nowrap">
+            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[300px] px-4 whitespace-nowrap">
               {{ getColumnDisplayName(column) }}
             </mat-header-cell>
-            <mat-cell *matCellDef="let row" [class]="'!px-4 !min-w-[150px] !max-w-[300px] ' + (column === 'email' ? 'text-blue-600' : column === 'name' ? 'font-medium' : '')">
+            <mat-cell *matCellDef="let row" [class]="'px-4 min-w-[150px] max-w-[300px] ' + (column === 'email' ? 'text-blue-600' : column === 'name' ? 'font-medium' : '')">
               <div class="truncate" [title]="formatCellValue(row[column])">
                 {{ formatCellValue(row[column]) }}
               </div>
@@ -141,15 +141,15 @@
 
           
           <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef class="!w-32 !min-w-[150px] !max-w-[150px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"></mat-header-cell>
-            <mat-cell *matCellDef="let client" class="!w-32 !min-w-[150px] !max-w-[150px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100">
+            <mat-header-cell *matHeaderCellDef class="w-32 min-w-[150px] max-w-[150px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
+            <mat-cell *matCellDef="let client" class="w-32 min-w-[150px] max-w-[150px] sticky right-0 bg-white z-10 border-l border-gray-100">
               <div class="flex space-x-1">
                 <button 
                   mat-icon-button 
-                  (click)="editClient(client)"
+                  (click)="toggleRowExpansion(client)"
                   class="text-gray-600 hover:text-blue-600"
-                  matTooltip="Преглед">
-                  <mat-icon>visibility</mat-icon>
+                  matTooltip="Покажи/Скрий детайли">
+                  <mat-icon>{{ isRowExpanded(client) ? 'expand_less' : 'expand_more' }}</mat-icon>
                 </button>
                 <button 
                   mat-icon-button 
@@ -169,8 +169,22 @@
             </mat-cell>
           </ng-container>
 
-          <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 cursor-pointer"></mat-row>
+          
+          <!-- Expandable row content -->
+          <ng-container *ngFor="let client of dataSource.data">
+            <mat-row *ngIf="isRowExpanded(client)" class="bg-gray-50">
+              <mat-cell [attr.colspan]="displayedColumns.length" class="px-4 py-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div><strong>ID:</strong> {{ client.id }}</div>
+                  <div><strong>Име:</strong> {{ client.name }}</div>
+                  <div><strong>Имейл:</strong> {{ client.email }}</div>
+                  <div><strong>Телефон:</strong> {{ client.phone }}</div>
+                </div>
+              </mat-cell>
+            </mat-row>
+          </ng-container>
         </mat-table>
         </div>
       </div>

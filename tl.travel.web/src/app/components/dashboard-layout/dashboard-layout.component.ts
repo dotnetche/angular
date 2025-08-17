@@ -64,4 +64,11 @@ export class DashboardLayoutComponent implements OnInit {
       verticalPosition: 'top'
     });
   }
+
+  getUserInitial(): string {
+    if (this.currentUser?.name) {
+      return this.currentUser.name.charAt(0).toUpperCase();
+    }
+    return 'U';
+  }
 }

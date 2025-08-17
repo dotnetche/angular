@@ -57,6 +57,8 @@ export class PaymentTypesComponent implements OnInit {
   currentPage = 0;
   pageSizeOptions = [10, 25, 50, 100];
 
+  expandedRows = new Set<number>();
+
   constructor(
     private fb: FormBuilder,
     private paymentTypesService: PaymentTypesService,
@@ -238,5 +240,19 @@ export class PaymentTypesComponent implements OnInit {
     if (!this.totalCount || this.totalCount === 0) return 0;
     const endRecord = Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
     return isNaN(endRecord) ? 0 : endRecord;
+  }
+
+  toggleRowExpansion(paymentType: PaymentTypeDTO): void {
+    if (paymentType.id) {
+      if (this.expandedRows.has(paymentType.id)) {
+        this.expandedRows.delete(paymentType.id);
+      } else {
+        this.expandedRows.add(paymentType.id);
+      }
+    }
+  }
+
+  isRowExpanded(paymentType: PaymentTypeDTO): boolean {
+    return paymentType.id ? this.expandedRows.has(paymentType.id) : false;
   }
 }

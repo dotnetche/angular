@@ -149,10 +149,7 @@
       <div class="min-w-max">
         <mat-table [dataSource]="dataSource" class="w-full min-w-max">
           <ng-container matColumnDef="select">
-            <mat-header-cell
-              *matHeaderCellDef
-              class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200"
-            >
+            <mat-header-cell *matHeaderCellDef class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-gray-100 z-20 border-r border-gray-200">
               <mat-checkbox
                 (change)="$event ? masterToggle() : null"
                 [checked]="selection.hasValue() && isAllSelected()"
@@ -160,10 +157,7 @@
               >
               </mat-checkbox>
             </mat-header-cell>
-            <mat-cell
-              *matCellDef="let row"
-              class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100"
-            >
+            <mat-cell *matCellDef="let row" class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-white z-20 border-r border-gray-100">
               <mat-checkbox
                 (click)="$event.stopPropagation()"
                 (change)="$event ? selection.toggle(row) : null"
@@ -175,16 +169,10 @@
 
           <!-- Dynamic Columns -->
           <ng-container *ngFor="let column of dynamicColumns" [matColumnDef]="column">
-            <mat-header-cell
-              *matHeaderCellDef
-              class="!font-semibold !min-w-[150px] !max-w-[300px] !px-4 !whitespace-nowrap"
-            >
+            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[300px] px-4 whitespace-nowrap">
               {{ getColumnDisplayName(column) }}
             </mat-header-cell>
-            <mat-cell
-              *matCellDef="let row"
-              [class]="'!px-4 !min-w-[150px] !max-w-[300px] ' + getColumnClass(column)"
-            >
+            <mat-cell *matCellDef="let row" [class]="'px-4 min-w-[150px] max-w-[300px] ' + getColumnClass(column)">
               @if (column === 'isTemporaryClosed') {
               <span
                 [class]="
@@ -204,22 +192,16 @@
           </ng-container>
 
           <ng-container matColumnDef="actions">
-            <mat-header-cell
-              *matHeaderCellDef
-              class="!w-32 !min-w-[150px] !max-w-[150px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"
-            ></mat-header-cell>
-            <mat-cell
-              *matCellDef="let hotel"
-              class="!w-32 !min-w-[150px] !max-w-[150px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100"
-            >
+            <mat-header-cell *matHeaderCellDef class="w-32 min-w-[150px] max-w-[150px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
+            <mat-cell *matCellDef="let hotel" class="w-32 min-w-[150px] max-w-[150px] sticky right-0 bg-white z-10 border-l border-gray-100">
               <div class="flex space-x-1">
                 <button
                   mat-icon-button
-                  (click)="editHotel(hotel)"
+                  (click)="toggleRowExpansion(hotel)"
                   class="text-gray-600 hover:text-blue-600"
-                  matTooltip="Преглед"
+                  matTooltip="Покажи/Скрий детайли"
                 >
-                  <mat-icon>visibility</mat-icon>
+                  <mat-icon>{{ isRowExpanded(hotel) ? 'expand_less' : 'expand_more' }}</mat-icon>
                 </button>
                 <button
                   mat-icon-button
@@ -241,7 +223,7 @@
             </mat-cell>
           </ng-container>
 
-          <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
           <mat-row
             *matRowDef="let row; columns: displayedColumns"
             class="hover:bg-gray-50 cursor-pointer"

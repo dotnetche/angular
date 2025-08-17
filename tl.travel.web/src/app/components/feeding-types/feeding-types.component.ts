@@ -57,6 +57,8 @@ export class FeedingTypesComponent implements OnInit {
   currentPage = 0;
   pageSizeOptions = [10, 25, 50, 100];
 
+  expandedRows = new Set<number>();
+
   constructor(
     private fb: FormBuilder,
     private feedingTypesService: FeedingTypesService,
@@ -239,5 +241,19 @@ export class FeedingTypesComponent implements OnInit {
     if (!this.totalCount || this.totalCount === 0) return 0;
     const endRecord = Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
     return isNaN(endRecord) ? 0 : endRecord;
+  }
+
+  toggleRowExpansion(feedingType: FeedingTypeDTO): void {
+    if (feedingType.id) {
+      if (this.expandedRows.has(feedingType.id)) {
+        this.expandedRows.delete(feedingType.id);
+      } else {
+        this.expandedRows.add(feedingType.id);
+      }
+    }
+  }
+
+  isRowExpanded(feedingType: FeedingTypeDTO): boolean {
+    return feedingType.id ? this.expandedRows.has(feedingType.id) : false;
   }
 }

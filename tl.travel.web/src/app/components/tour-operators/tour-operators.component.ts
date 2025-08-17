@@ -59,6 +59,8 @@ export class TourOperatorsComponent implements OnInit {
   currentPage = 0;
   pageSizeOptions = [10, 25, 50, 100];
 
+  expandedRows = new Set<number>();
+
   constructor(
     private fb: FormBuilder,
     private tourOperatorsService: TourOperatorsService,
@@ -259,5 +261,19 @@ export class TourOperatorsComponent implements OnInit {
     if (!this.totalCount || this.totalCount === 0) return 0;
     const endRecord = Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
     return isNaN(endRecord) ? 0 : endRecord;
+  }
+
+  toggleRowExpansion(operator: TourOperatorDTO): void {
+    if (operator.id) {
+      if (this.expandedRows.has(operator.id)) {
+        this.expandedRows.delete(operator.id);
+      } else {
+        this.expandedRows.add(operator.id);
+      }
+    }
+  }
+
+  isRowExpanded(operator: TourOperatorDTO): boolean {
+    return operator.id ? this.expandedRows.has(operator.id) : false;
   }
 }
