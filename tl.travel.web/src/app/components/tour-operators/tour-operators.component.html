@@ -94,13 +94,23 @@
     
     <div class="bg-white rounded-lg shadow-sm border mb-6">
       <div class="p-4 sm:p-6">
-        <form [formGroup]="searchForm" class="flex items-center space-x-4">
-          <mat-form-field class="flex-1">
-            <mat-label>Търсене</mat-label>
-            <input matInput formControlName="searchTerm" placeholder="Търсене по име">
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
-        </form>
+        <div class="flex items-center justify-between space-x-4">
+          <form [formGroup]="searchForm" class="flex-1">
+            <mat-form-field class="w-full">
+              <mat-label>Търсене</mat-label>
+              <input matInput formControlName="searchTerm" placeholder="Търсене по име">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </form>
+          <button 
+            mat-stroked-button 
+            (click)="showAllRows()"
+            [disabled]="hiddenRows.size === 0"
+            class="whitespace-nowrap">
+            <mat-icon class="mr-2">visibility</mat-icon>
+            Покажи всички ({{ hiddenRows.size }})
+          </button>
+        </div>
       </div>
     </div>
 
@@ -160,6 +170,13 @@
               <div class="flex space-x-1">
                 <button 
                   mat-icon-button 
+                  (click)="hideRow(operator)"
+                  class="text-gray-600 hover:text-orange-600"
+                  matTooltip="Скрий ред">
+                  <mat-icon>visibility_off</mat-icon>
+                </button>
+                <button 
+                  mat-icon-button 
                   (click)="toggleRowExpansion(operator)"
                   class="text-gray-600 hover:text-blue-600"
                   matTooltip="Покажи/Скрий детайли">
@@ -184,7 +201,9 @@
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 cursor-pointer"></mat-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" 
+                   [style.display]="isRowHidden(row) ? 'none' : ''"
+                   class="hover:bg-gray-50 cursor-pointer"></mat-row>
         </mat-table>
         </div>
       </div>
