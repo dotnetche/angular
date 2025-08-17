@@ -279,18 +279,4 @@ export class TourOperatorsComponent implements OnInit {
   }
 
   hideRow(operator: TourOperatorDTO): void {
-    if (operator.id) {
-      this.hiddenRows.add(operator.id);
-      // Also remove from selection if hidden
-      this.selection.deselect(operator);
-    }
-  }
-
-  isRowHidden(operator: TourOperatorDTO): boolean {
-    return operator.id ? this.hiddenRows.has(operator.id) : false;
-  }
-
-  showAllRows(): void {
-    this.hiddenRows.clear();
-  }
 }

@@ -258,18 +258,4 @@ export class PaymentTypesComponent implements OnInit {
   }
 
   hideRow(paymentType: PaymentTypeDTO): void {
-    if (paymentType.id) {
-      this.hiddenRows.add(paymentType.id);
-      // Also remove from selection if hidden
-      this.selection.deselect(paymentType);
-    }
-  }
-
-  isRowHidden(paymentType: PaymentTypeDTO): boolean {
-    return paymentType.id ? this.hiddenRows.has(paymentType.id) : false;
-  }
-
-  showAllRows(): void {
-    this.hiddenRows.clear();
-  }
 }

@@ -347,18 +347,4 @@ export class ClientsComponent implements OnInit {
   }
 
   hideRow(client: ClientDTO): void {
-    if (client.id) {
-      this.hiddenRows.add(client.id);
-      // Also remove from selection if hidden
-      this.selection.deselect(client);
-    }
-  }
-
-  isRowHidden(client: ClientDTO): boolean {
-    return client.id ? this.hiddenRows.has(client.id) : false;
-  }
-
-  showAllRows(): void {
-    this.hiddenRows.clear();
-  }
 }

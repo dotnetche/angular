@@ -409,20 +409,6 @@ export class HotelsComponent implements OnInit {
 
   hideRow(hotel: HotelDTO): void {
     if (hotel.id) {
-      this.hiddenRows.add(hotel.id);
-      // Also remove from selection if hidden
-      this.selection.deselect(hotel);
-    }
-  }
-
-  isRowHidden(hotel: HotelDTO): boolean {
-    return hotel.id ? this.hiddenRows.has(hotel.id) : false;
-  }
-
-  showAllRows(): void {
-    this.hiddenRows.clear();
-  }
-
   compareById(o1: any, o2: any): boolean {
     return o1 === o2;
   }

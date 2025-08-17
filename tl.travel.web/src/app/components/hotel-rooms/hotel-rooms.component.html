@@ -238,8 +238,8 @@
           </ng-container>
 
           <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef class="w-32 min-w-[150px] max-w-[150px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
-            <mat-cell *matCellDef="let room" class="w-32 min-w-[150px] max-w-[150px] sticky right-0 bg-white z-10 border-l border-gray-100">
+            <mat-header-cell *matHeaderCellDef class="w-32 min-w-[120px] max-w-[120px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
+            <mat-cell *matCellDef="let room" class="w-32 min-w-[120px] max-w-[120px] sticky right-0 bg-white z-10 border-l border-gray-100">
               <div class="flex space-x-1">
                 <button
                   mat-icon-button
@@ -247,14 +247,6 @@
                   class="text-gray-600 hover:text-orange-600"
                   matTooltip="Скрий ред">
                   <mat-icon>visibility_off</mat-icon>
-                </button>
-                <button
-                  mat-icon-button
-                  (click)="toggleRowExpansion(room)"
-                  class="text-gray-600 hover:text-blue-600"
-                  matTooltip="Покажи/Скрий детайли"
-                >
-                  <mat-icon>{{ isRowExpanded(room) ? 'expand_less' : 'expand_more' }}</mat-icon>
                 </button>
                 <button
                   mat-icon-button

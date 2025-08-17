@@ -442,20 +442,6 @@ export class ReservationsComponent implements OnInit {
   }
 
   hideRow(reservation: ReservationDTO): void {
-    if (reservation.id) {
-      this.hiddenRows.add(reservation.id);
-      // Also remove from selection if hidden
-      this.selection.deselect(reservation);
-    }
-  }
-
-  isRowHidden(reservation: ReservationDTO): boolean {
-    return reservation.id ? this.hiddenRows.has(reservation.id) : false;
-  }
-
-  showAllRows(): void {
-    this.hiddenRows.clear();
-  }
 
   compareById(o1: any, o2: any): boolean {
     return o1 === o2;
