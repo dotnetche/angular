@@ -67,7 +67,6 @@ export class HotelsComponent implements OnInit {
   starsOptions = [1, 2, 3, 4, 5];
 
   expandedRows = new Set<number>();
-  hiddenRows = new Set<number>();
 
   constructor(
     private fb: FormBuilder,
@@ -405,15 +404,5 @@ export class HotelsComponent implements OnInit {
 
   isRowExpanded(hotel: HotelDTO): boolean {
     return hotel.id ? this.expandedRows.has(hotel.id) : false;
-  }
-
-  hideRow(hotel: HotelDTO): void {
-    if (hotel.id) {
-      this.hiddenRows.add(hotel.id);
-    }
-  }
-
-  compareById(o1: any, o2: any): boolean {
-    return o1 === o2;
   }
 }

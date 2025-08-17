@@ -30,8 +30,8 @@
 
         <mat-form-field class="w-full">
           <mat-label>Хотел</mat-label>
-          <mat-select formControlName="hotelId" [compareWith]="compareById">
-            <mat-option>Изберете хотел</mat-option>
+          <mat-select formControlName="hotelId">
+            <mat-option [value]="null">Изберете хотел</mat-option>
             <mat-option *ngFor="let hotel of hotels" [value]="hotel.id">
               {{ hotel.name }}
             </mat-option>
@@ -135,27 +135,17 @@
 
   <div class="bg-white rounded-lg shadow-sm border mb-6">
     <div class="p-4 sm:p-6">
-      <div class="flex items-center justify-between space-x-4">
-        <form [formGroup]="searchForm" class="flex-1">
-          <mat-form-field class="w-full">
-            <mat-label>Търсене</mat-label>
-            <input
-              matInput
-              formControlName="searchTerm"
-              placeholder="Търсене по име, хотел или описание"
-            />
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
-        </form>
-        <button 
-          mat-stroked-button 
-          (click)="showAllRows()"
-          [disabled]="hiddenRows.size === 0"
-          class="whitespace-nowrap">
-          <mat-icon class="mr-2">visibility</mat-icon>
-          Покажи всички ({{ hiddenRows.size }})
-        </button>
-      </div>
+      <form [formGroup]="searchForm" class="flex items-center space-x-4">
+        <mat-form-field class="flex-1">
+          <mat-label>Търсене</mat-label>
+          <input
+            matInput
+            formControlName="searchTerm"
+            placeholder="Търсене по име, хотел или описание"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </form>
     </div>
   </div>
 
@@ -238,15 +228,16 @@
           </ng-container>
 
           <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef class="w-32 min-w-[120px] max-w-[120px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
-            <mat-cell *matCellDef="let room" class="w-32 min-w-[120px] max-w-[120px] sticky right-0 bg-white z-10 border-l border-gray-100">
+            <mat-header-cell *matHeaderCellDef class="w-32 min-w-[150px] max-w-[150px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
+            <mat-cell *matCellDef="let room" class="w-32 min-w-[150px] max-w-[150px] sticky right-0 bg-white z-10 border-l border-gray-100">
               <div class="flex space-x-1">
                 <button
                   mat-icon-button
-                  (click)="hideRow(room)"
-                  class="text-gray-600 hover:text-orange-600"
-                  matTooltip="Скрий ред">
-                  <mat-icon>visibility_off</mat-icon>
+                  (click)="toggleRowExpansion(room)"
+                  class="text-gray-600 hover:text-blue-600"
+                  matTooltip="Покажи/Скрий детайли"
+                >
+                  <mat-icon>{{ isRowExpanded(room) ? 'expand_less' : 'expand_more' }}</mat-icon>
                 </button>
                 <button
                   mat-icon-button
@@ -271,7 +262,6 @@
           <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
           <mat-row
             *matRowDef="let row; columns: displayedColumns"
-            [style.display]="isRowHidden(row) ? 'none' : ''"
             class="hover:bg-gray-50 cursor-pointer"
           ></mat-row>
         </mat-table>

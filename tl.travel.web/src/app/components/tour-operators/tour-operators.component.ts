@@ -60,7 +60,6 @@ export class TourOperatorsComponent implements OnInit {
   pageSizeOptions = [10, 25, 50, 100];
 
   expandedRows = new Set<number>();
-  hiddenRows = new Set<number>();
 
   constructor(
     private fb: FormBuilder,
@@ -276,8 +275,5 @@ export class TourOperatorsComponent implements OnInit {
 
   isRowExpanded(operator: TourOperatorDTO): boolean {
     return operator.id ? this.expandedRows.has(operator.id) : false;
-  }
-
-  hideRow(operator: TourOperatorDTO): void {
   }
 }

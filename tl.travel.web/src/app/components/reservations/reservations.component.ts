@@ -91,9 +91,6 @@ export class ReservationsComponent implements OnInit {
   paymentChannels: PaymentChannelDTO[] = [];
   clients: ClientDTO[] = [];
 
-  expandedRows = new Set<number>();
-  hiddenRows = new Set<number>();
-
   constructor(
     private fb: FormBuilder,
     private reservationsService: ReservationsService,
@@ -425,26 +422,5 @@ export class ReservationsComponent implements OnInit {
     if (!this.totalCount || this.totalCount === 0) return 0;
     const endRecord = Math.min((this.currentPage + 1) * this.pageSize, this.totalCount);
     return isNaN(endRecord) ? 0 : endRecord;
-  }
-
-  toggleRowExpansion(reservation: ReservationDTO): void {
-    if (reservation.id) {
-      if (this.expandedRows.has(reservation.id)) {
-        this.expandedRows.delete(reservation.id);
-      } else {
-        this.expandedRows.add(reservation.id);
-      }
-    }
-  }
-
-  isRowExpanded(reservation: ReservationDTO): boolean {
-    return reservation.id ? this.expandedRows.has(reservation.id) : false;
-  }
-
-  hideRow(reservation: ReservationDTO): void {
-  }
-
-  compareById(o1: any, o2: any): boolean {
-    return o1 === o2;
   }
 }

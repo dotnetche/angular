@@ -1,9 +1,11 @@
 <!-- Header Breadcrumb -->
-<div class="bg-white shadow-sm border-b px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+<div
+  class="bg-white shadow-sm border-b px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
+>
   <div class="flex items-center space-x-4">
     <span class="text-gray-600">Хотели</span>
     @if (showAddForm) {
-      <span class="text-gray-400">/ {{ isEditing ? 'Редактиране' : 'Добавяне' }}</span>
+    <span class="text-gray-400">/ {{ isEditing ? 'Редактиране' : 'Добавяне' }}</span>
     }
   </div>
 </div>
@@ -11,275 +13,262 @@
 <!-- Main Content -->
 <div class="p-4 sm:p-6 lg:p-8 max-w-full">
   @if (showAddForm) {
-    <div class="bg-white rounded-lg shadow-sm border max-w-4xl mx-auto">
-      <div class="px-4 sm:px-6 lg:px-8 py-6 border-b">
-        <h2 class="text-xl font-semibold text-gray-800">
-          {{ isEditing ? 'Редактиране на хотел' : 'Добави хотел' }}
-        </h2>
-      </div>
+  <div class="bg-white rounded-lg shadow-sm border max-w-4xl mx-auto">
+    <div class="px-4 sm:px-6 lg:px-8 py-6 border-b">
+      <h2 class="text-xl font-semibold text-gray-800">
+        {{ isEditing ? 'Редактиране на хотел' : 'Добави хотел' }}
+      </h2>
+    </div>
 
-      <form [formGroup]="hotelForm" class="p-4 sm:p-6 lg:p-8 space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <mat-form-field class="w-full">
-            <mat-label>Име на хотел</mat-label>
-            <input matInput formControlName="name" placeholder="Въведете име на хотела" />
-            <mat-error>{{ getErrorMessage('name') }}</mat-error>
-          </mat-form-field>
-
-          <mat-form-field class="w-full">
-            <mat-label>Категория (звезди)</mat-label>
-            <mat-select formControlName="stars">
-              <mat-option [value]="null">Без категория</mat-option>
-              <mat-option *ngFor="let star of starsOptions" [value]="star">
-                {{ getStarsDisplay(star) }} ({{ star }} звезди)
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field class="w-full">
-            <mat-label>Локация</mat-label>
-            <mat-select formControlName="locationId" [compareWith]="compareById">
-              <mat-option>Изберете локация</mat-option>
-              <mat-option *ngFor="let location of locations" [value]="location.id">
-                {{ location.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field class="w-full">
-            <mat-label>Партньор</mat-label>
-            <mat-select formControlName="partnerId" [compareWith]="compareById">
-              <mat-option>Изберете партньор</mat-option>
-              <mat-option *ngFor="let partner of partners" [value]="partner.id">
-                {{ partner.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
+    <form [formGroup]="hotelForm" class="p-4 sm:p-6 lg:p-8 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <mat-form-field class="w-full">
-          <mat-label>Контакти</mat-label>
-          <textarea
-            matInput
-            formControlName="contacts"
-            rows="3"
-            placeholder="Въведете контактна информация"
-          ></textarea>
-          <mat-error>{{ getErrorMessage('contacts') }}</mat-error>
+          <mat-label>Име на хотел</mat-label>
+          <input matInput formControlName="name" placeholder="Въведете име на хотела" />
+          <mat-error>{{ getErrorMessage('name') }}</mat-error>
         </mat-form-field>
 
-        <div class="flex items-center">
-          <mat-slide-toggle formControlName="isTemporaryClosed" color="warn">
-            Временно затворен
-          </mat-slide-toggle>
-        </div>
+        <mat-form-field class="w-full">
+          <mat-label>Категория (звезди)</mat-label>
+          <mat-select formControlName="stars">
+            <mat-option [value]="null">Без категория</mat-option>
+            <mat-option *ngFor="let star of starsOptions" [value]="star">
+              {{ getStarsDisplay(star) }} ({{ star }} звезди)
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 pt-4">
-          <button
-            mat-raised-button
-            color="primary"
-            type="button"
-            (click)="saveHotel()"
-            [disabled]="!hotelForm.valid || isLoading"
-            class="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
-          >
-            {{ isEditing ? 'Обнови' : 'Добави' }}
-          </button>
+        <mat-form-field class="w-full">
+          <mat-label>Локация</mat-label>
+          <mat-select formControlName="locationId">
+            <mat-option [value]="null">Изберете локация</mat-option>
+            <mat-option *ngFor="let location of locations" [value]="location.id">
+              {{ location.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-          @if (!isEditing) {
-            <button
-              mat-raised-button
-              type="button"
-              (click)="saveAndAddAnother()"
-              [disabled]="!hotelForm.valid || isLoading"
-              class="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto"
-            >
-              Добави и добави друг
-            </button>
-          }
+        <mat-form-field class="w-full">
+          <mat-label>Партньор</mat-label>
+          <mat-select formControlName="partnerId">
+            <mat-option [value]="null">Изберете партньор</mat-option>
+            <mat-option *ngFor="let partner of partners" [value]="partner.id">
+              {{ partner.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-          <button
-            mat-button
-            type="button"
-            (click)="cancelForm()"
-            class="text-gray-600 hover:text-gray-800 w-full sm:w-auto"
-          >
-            Отказ
-          </button>
-        </div>
+      <mat-form-field class="w-full">
+        <mat-label>Контакти</mat-label>
+        <textarea
+          matInput
+          formControlName="contacts"
+          rows="3"
+          placeholder="Въведете контактна информация"
+        ></textarea>
+        <mat-error>{{ getErrorMessage('contacts') }}</mat-error>
+      </mat-form-field>
+
+      <div class="flex items-center">
+        <mat-slide-toggle formControlName="isTemporaryClosed" color="warn">
+          Временно затворен
+        </mat-slide-toggle>
+      </div>
+
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 pt-4">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="saveHotel()"
+          [disabled]="!hotelForm.valid || isLoading"
+          class="bg-gray-600 hover:bg-gray-700 w-full sm:w-auto"
+        >
+          {{ isEditing ? 'Обнови' : 'Добави' }}
+        </button>
+
+        @if (!isEditing) {
+        <button
+          mat-raised-button
+          type="button"
+          (click)="saveAndAddAnother()"
+          [disabled]="!hotelForm.valid || isLoading"
+          class="bg-gray-500 hover:bg-gray-600 text-white w-full sm:w-auto"
+        >
+          Добави и добави друг
+        </button>
+        }
+
+        <button
+          mat-button
+          type="button"
+          (click)="cancelForm()"
+          class="text-gray-600 hover:text-gray-800 w-full sm:w-auto"
+        >
+          Отказ
+        </button>
+      </div>
+    </form>
+  </div>
+  } @if (!showAddForm) {
+
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0"
+  >
+    <h1 class="text-2xl font-bold text-gray-800">Хотели</h1>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="showAddHotelForm()"
+      class="bg-gray-600 hover:bg-gray-700 w-full sm:w-auto"
+    >
+      <mat-icon class="mr-2">add</mat-icon>
+      Добави хотел
+    </button>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border mb-6">
+    <div class="p-4 sm:p-6">
+      <form [formGroup]="searchForm" class="flex items-center space-x-4">
+        <mat-form-field class="flex-1">
+          <mat-label>Търсене</mat-label>
+          <input
+            matInput
+            formControlName="searchTerm"
+            placeholder="Търсене по име, локация или партньор"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
       </form>
     </div>
-  } @else {
-    <!-- Page Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
-      <h1 class="text-2xl font-bold text-gray-800">Хотели</h1>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="showAddHotelForm()"
-        class="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+    <div class="overflow-x-auto">
+      <div class="min-w-max">
+        <mat-table [dataSource]="dataSource" class="w-full min-w-max">
+          <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-gray-100 z-20 border-r border-gray-200">
+              <mat-checkbox
+                (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+              >
+              </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row" class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-white z-20 border-r border-gray-100">
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+              >
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Dynamic Columns -->
+          <ng-container *ngFor="let column of dynamicColumns" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[300px] px-4 whitespace-nowrap">
+              {{ getColumnDisplayName(column) }}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row" [class]="'px-4 min-w-[150px] max-w-[300px] ' + getColumnClass(column)">
+              @if (column === 'isTemporaryClosed') {
+              <span
+                [class]="
+                  row[column]
+                    ? 'text-red-600 bg-red-100 px-2 py-1 rounded-full text-xs'
+                    : 'text-green-600 bg-green-100 px-2 py-1 rounded-full text-xs'
+                "
+              >
+                {{ formatCellValue(row[column], column) }}
+              </span>
+              } @else {
+              <div class="truncate" [title]="formatCellValue(row[column], column)">
+                {{ formatCellValue(row[column], column) }}
+              </div>
+              }
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef class="w-32 min-w-[150px] max-w-[150px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
+            <mat-cell *matCellDef="let hotel" class="w-32 min-w-[150px] max-w-[150px] sticky right-0 bg-white z-10 border-l border-gray-100">
+              <div class="flex space-x-1">
+                <button
+                  mat-icon-button
+                  (click)="toggleRowExpansion(hotel)"
+                  class="text-gray-600 hover:text-blue-600"
+                  matTooltip="Покажи/Скрий детайли"
+                >
+                  <mat-icon>{{ isRowExpanded(hotel) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  (click)="editHotel(hotel)"
+                  class="text-gray-600 hover:text-green-600"
+                  matTooltip="Редактиране"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  (click)="deleteHotel(hotel)"
+                  class="text-gray-600 hover:text-red-600"
+                  matTooltip="Изтриване"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
+          <mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="hover:bg-gray-50 cursor-pointer"
+          ></mat-row>
+        </mat-table>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading) {
+  <div class="flex justify-center items-center py-8">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+  } @if (!isLoading && dataSource.data.length === 0) {
+  <div class="text-center py-12 px-4">
+    <mat-icon class="text-gray-400 text-6xl mb-4">hotel</mat-icon>
+    <h3 class="text-lg font-medium text-gray-600 mb-2">Няма намерени хотели</h3>
+    <p class="text-gray-500 mb-4">Започнете като добавите първия си хотел</p>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="showAddHotelForm()"
+      class="bg-gray-600 hover:bg-gray-700"
+    >
+      Добави хотел
+    </button>
+  </div>
+  }
+
+  <div class="border-t bg-gray-50 px-4 sm:px-6 py-3">
+    <div class="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
+      <div class="text-sm text-gray-600">
+        От {{ getStartRecord() }} до {{ getEndRecord() }} от {{ totalCount }} резултата
+      </div>
+
+      <mat-paginator
+        [length]="totalCount"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
       >
-        <mat-icon class="mr-2">add</mat-icon>
-        Добави хотел
-      </button>
+      </mat-paginator>
     </div>
-
-    <!-- Search Section -->
-    <div class="bg-white rounded-lg shadow-sm border mb-6">
-      <div class="p-4 sm:p-6">
-        <div class="flex items-center justify-between space-x-4">
-          <form [formGroup]="searchForm" class="flex-1">
-            <mat-form-field class="w-full">
-              <mat-label>Търсене</mat-label>
-              <input
-                matInput
-                formControlName="searchTerm"
-                placeholder="Търсене по име, локация или партньор"
-              />
-              <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
-          </form>
-          <button 
-            mat-stroked-button 
-            (click)="showAllRows()"
-            [disabled]="hiddenRows.size === 0"
-            class="whitespace-nowrap">
-            <mat-icon class="mr-2">visibility</mat-icon>
-            Покажи всички ({{ hiddenRows.size }})
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Hotels Table -->
-    <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
-      <div class="overflow-x-auto">
-        <div class="min-w-max">
-          <mat-table [dataSource]="dataSource" class="w-full min-w-max">
-            <!-- Selection Column -->
-            <ng-container matColumnDef="select">
-              <mat-header-cell *matHeaderCellDef class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-gray-100 z-20 border-r border-gray-200">
-                <mat-checkbox
-                  (change)="$event ? masterToggle() : null"
-                  [checked]="selection.hasValue() && isAllSelected()"
-                  [indeterminate]="selection.hasValue() && !isAllSelected()"
-                >
-                </mat-checkbox>
-              </mat-header-cell>
-              <mat-cell *matCellDef="let row" class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-white z-20 border-r border-gray-100">
-                <mat-checkbox
-                  (click)="$event.stopPropagation()"
-                  (change)="$event ? selection.toggle(row) : null"
-                  [checked]="selection.isSelected(row)"
-                >
-                </mat-checkbox>
-              </mat-cell>
-            </ng-container>
-
-            <!-- Dynamic Columns -->
-            <ng-container *ngFor="let column of dynamicColumns" [matColumnDef]="column">
-              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[300px] px-4 whitespace-nowrap">
-                {{ getColumnDisplayName(column) }}
-              </mat-header-cell>
-              <mat-cell *matCellDef="let row" [class]="'px-4 min-w-[150px] max-w-[300px] ' + getColumnClass(column)">
-                @if (column === 'isTemporaryClosed') {
-                  <span
-                    [class]="
-                      row[column]
-                        ? 'text-red-600 bg-red-100 px-2 py-1 rounded-full text-xs'
-                        : 'text-green-600 bg-green-100 px-2 py-1 rounded-full text-xs'
-                    "
-                  >
-                    {{ formatCellValue(row[column], column) }}
-                  </span>
-                } @else {
-                  <div class="truncate" [title]="formatCellValue(row[column], column)">
-                    {{ formatCellValue(row[column], column) }}
-                  </div>
-                }
-              </mat-cell>
-            </ng-container>
-
-            <!-- Actions Column -->
-            <ng-container matColumnDef="actions">
-              <mat-header-cell *matHeaderCellDef class="w-32 min-w-[120px] max-w-[120px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
-              <mat-cell *matCellDef="let hotel" class="w-32 min-w-[120px] max-w-[120px] sticky right-0 bg-white z-10 border-l border-gray-100">
-                <div class="flex space-x-1">
-                  <button
-                    mat-icon-button
-                    (click)="hideRow(hotel)"
-                    class="text-gray-600 hover:text-orange-600"
-                    matTooltip="Скрий ред">
-                    <mat-icon>visibility_off</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    (click)="editHotel(hotel)"
-                    class="text-gray-600 hover:text-green-600"
-                    matTooltip="Редактиране">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    (click)="deleteHotel(hotel)"
-                    class="text-gray-600 hover:text-red-600"
-                    matTooltip="Изтриване">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-              </mat-cell>
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;" 
-                     [style.display]="isRowHidden(row) ? 'none' : ''"
-                     class="hover:bg-gray-50 cursor-pointer"></mat-row>
-          </mat-table>
-        </div>
-      </div>
-
-      <!-- Loading State -->
-      @if (isLoading) {
-        <div class="flex justify-center items-center py-8">
-          <mat-spinner diameter="40"></mat-spinner>
-        </div>
-      }
-
-      <!-- Empty State -->
-      @if (!isLoading && dataSource.data.length === 0) {
-        <div class="text-center py-12 px-4">
-          <mat-icon class="text-gray-400 text-6xl mb-4">hotel</mat-icon>
-          <h3 class="text-lg font-medium text-gray-600 mb-2">Няма намерени хотели</h3>
-          <p class="text-gray-500 mb-4">Започнете като добавите първия си хотел</p>
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="showAddHotelForm()"
-            class="bg-green-600 hover:bg-green-700"
-          >
-            Добави хотел
-          </button>
-        </div>
-      }
-
-      <!-- Pagination -->
-      <div class="border-t bg-gray-50 px-4 sm:px-6 py-3">
-        <div class="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
-          <div class="text-sm text-gray-600">
-            От {{ getStartRecord() }} до {{ getEndRecord() }} от {{ totalCount }} резултата
-          </div>
-
-          <mat-paginator
-            [length]="totalCount"
-            [pageSize]="pageSize"
-            [pageSizeOptions]="pageSizeOptions"
-            [pageIndex]="currentPage"
-            (page)="onPageChange($event)"
-            showFirstLastButtons
-          >
-          </mat-paginator>
-        </div>
-      </div>
-    </div>
+  </div>
   }
 </div>

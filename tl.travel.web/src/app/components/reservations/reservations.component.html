@@ -23,8 +23,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <mat-form-field class="w-full">
             <mat-label>Хотел</mat-label>
-            <mat-select formControlName="hotelId" [compareWith]="compareById">
-              <mat-option>Изберете хотел</mat-option>
+            <mat-select formControlName="hotelId">
+              <mat-option [value]="null">Изберете хотел</mat-option>
               <mat-option *ngFor="let hotel of hotels" [value]="hotel.id">
                 {{ hotel.name }}
               </mat-option>
@@ -34,8 +34,8 @@
 
           <mat-form-field class="w-full">
             <mat-label>Клиент</mat-label>
-            <mat-select formControlName="clientId" [compareWith]="compareById">
-              <mat-option>Изберете клиент</mat-option>
+            <mat-select formControlName="clientId">
+              <mat-option [value]="null">Изберете клиент</mat-option>
               <mat-option *ngFor="let client of clients" [value]="client.id">
                 {{ client.name }}
               </mat-option>
@@ -45,8 +45,8 @@
 
           <mat-form-field class="w-full">
             <mat-label>Туристически оператор</mat-label>
-            <mat-select formControlName="operatorId" [compareWith]="compareById">
-              <mat-option>Изберете оператор</mat-option>
+            <mat-select formControlName="operatorId">
+              <mat-option [value]="null">Изберете оператор</mat-option>
               <mat-option *ngFor="let operator of operators" [value]="operator.id">
                 {{ operator.name }}
               </mat-option>
@@ -56,8 +56,8 @@
 
           <mat-form-field class="w-full">
             <mat-label>Статус на резервация</mat-label>
-            <mat-select formControlName="reservationStatusId" [compareWith]="compareById">
-              <mat-option>Изберете статус</mat-option>
+            <mat-select formControlName="reservationStatusId">
+              <mat-option [value]="null">Изберете статус</mat-option>
               <mat-option *ngFor="let status of reservationStatuses" [value]="status.id">
                 {{ status.name }}
               </mat-option>
@@ -122,8 +122,8 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <mat-form-field class="w-full">
                       <mat-label>Стая в хотел</mat-label>
-                      <mat-select formControlName="hotelRoomId" [compareWith]="compareById">
-                        <mat-option>Изберете стая</mat-option>
+                      <mat-select formControlName="hotelRoomId">
+                        <mat-option [value]="null">Изберете стая</mat-option>
                         <mat-option *ngFor="let hotelRoom of hotelRooms" [value]="hotelRoom.id">
                           {{ hotelRoom.name }}
                         </mat-option>
@@ -132,8 +132,8 @@
 
                     <mat-form-field class="w-full">
                       <mat-label>Тип изхранване</mat-label>
-                      <mat-select formControlName="feedingTypeId" [compareWith]="compareById">
-                        <mat-option>Изберете изхранване</mat-option>
+                      <mat-select formControlName="feedingTypeId">
+                        <mat-option [value]="null">Изберете изхранване</mat-option>
                         <mat-option *ngFor="let feeding of feedingTypes" [value]="feeding.id">
                           {{ feeding.name }}
                         </mat-option>
@@ -197,8 +197,8 @@
 
                     <mat-form-field class="w-full">
                       <mat-label>Тип плащане</mat-label>
-                      <mat-select formControlName="paymentTypeId" [compareWith]="compareById">
-                        <mat-option>Изберете тип</mat-option>
+                      <mat-select formControlName="paymentTypeId">
+                        <mat-option [value]="null">Изберете тип</mat-option>
                         <mat-option *ngFor="let paymentType of paymentTypes" [value]="paymentType.id">
                           {{ paymentType.name }}
                         </mat-option>
@@ -207,8 +207,8 @@
 
                     <mat-form-field class="w-full">
                       <mat-label>Канал за плащане</mat-label>
-                      <mat-select formControlName="paymentChannelId" [compareWith]="compareById">
-                        <mat-option>Изберете канал</mat-option>
+                      <mat-select formControlName="paymentChannelId">
+                        <mat-option [value]="null">Изберете канал</mat-option>
                         <mat-option *ngFor="let channel of paymentChannels" [value]="channel.id">
                           {{ channel.name }}
                         </mat-option>
@@ -273,23 +273,13 @@
     <!-- Search Section -->
     <div class="bg-white rounded-lg shadow-sm border mb-6">
       <div class="p-4 sm:p-6">
-        <div class="flex items-center justify-between space-x-4">
-          <form [formGroup]="searchForm" class="flex-1">
-            <mat-form-field class="w-full">
-              <mat-label>Търсене</mat-label>
-              <input matInput formControlName="searchTerm" placeholder="Търсене по хотел, клиент или оператор">
-              <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
-          </form>
-          <button 
-            mat-stroked-button 
-            (click)="showAllRows()"
-            [disabled]="hiddenRows.size === 0"
-            class="whitespace-nowrap">
-            <mat-icon class="mr-2">visibility</mat-icon>
-            Покажи всички ({{ hiddenRows.size }})
-          </button>
-        </div>
+        <form [formGroup]="searchForm" class="flex items-center space-x-4">
+          <mat-form-field class="flex-1">
+            <mat-label>Търсене</mat-label>
+            <input matInput formControlName="searchTerm" placeholder="Търсене по хотел, клиент или оператор">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </form>
       </div>
     </div>
 
@@ -300,14 +290,14 @@
           <mat-table [dataSource]="dataSource" class="w-full min-w-max">
             <!-- Selection Column -->
             <ng-container matColumnDef="select">
-              <mat-header-cell *matHeaderCellDef class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-gray-100 z-20 border-r border-gray-200">
+              <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200">
                 <mat-checkbox 
                   (change)="$event ? masterToggle() : null"
                   [checked]="selection.hasValue() && isAllSelected()"
                   [indeterminate]="selection.hasValue() && !isAllSelected()">
                 </mat-checkbox>
               </mat-header-cell>
-              <mat-cell *matCellDef="let row" class="w-12 min-w-[80px] max-w-[80px] flex-shrink-0 sticky left-0 bg-white z-20 border-r border-gray-100">
+              <mat-cell *matCellDef="let row" class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100">
                 <mat-checkbox 
                   (click)="$event.stopPropagation()"
                   (change)="$event ? selection.toggle(row) : null"
@@ -318,8 +308,8 @@
 
             <!-- Hotel Name Column -->
             <ng-container matColumnDef="hotelName">
-              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[250px] px-4 whitespace-nowrap">Хотел</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="font-medium min-w-[150px] max-w-[250px] px-4">
+              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[150px] !max-w-[250px] !px-4 !whitespace-nowrap">Хотел</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="!font-medium !min-w-[150px] !max-w-[250px] !px-4">
                 <div class="truncate" [title]="reservation.hotelName || 'Не е указан'">
                   {{ reservation.hotelName || 'Не е указан' }}
                 </div>
@@ -328,8 +318,8 @@
 
             <!-- Client Name Column -->
             <ng-container matColumnDef="clientName">
-              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[250px] px-4 whitespace-nowrap">Клиент</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="min-w-[150px] max-w-[250px] px-4">
+              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[150px] !max-w-[250px] !px-4 !whitespace-nowrap">Клиент</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="!min-w-[150px] !max-w-[250px] !px-4">
                 <div class="truncate" [title]="reservation.clientName || 'Не е указан'">
                   {{ reservation.clientName || 'Не е указан' }}
                 </div>
@@ -338,8 +328,8 @@
 
             <!-- Operator Name Column -->
             <ng-container matColumnDef="operatorName">
-              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[150px] max-w-[250px] px-4 whitespace-nowrap">Оператор</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="min-w-[150px] max-w-[250px] px-4">
+              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[150px] !max-w-[250px] !px-4 !whitespace-nowrap">Оператор</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="!min-w-[150px] !max-w-[250px] !px-4">
                 <div class="truncate" [title]="reservation.operatorName || 'Не е указан'">
                   {{ reservation.operatorName || 'Не е указан' }}
                 </div>
@@ -348,32 +338,32 @@
 
             <!-- Date From Column -->
             <ng-container matColumnDef="dateFrom">
-              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px] max-w-[150px] px-4 whitespace-nowrap">Дата от</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="min-w-[120px] max-w-[150px] px-4">
+              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[120px] !max-w-[150px] !px-4 !whitespace-nowrap">Дата от</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="!min-w-[120px] !max-w-[150px] !px-4">
                 {{ formatDate(reservation.dateFrom) }}
               </mat-cell>
             </ng-container>
 
             <!-- Date To Column -->
             <ng-container matColumnDef="dateTo">
-              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px] max-w-[150px] px-4 whitespace-nowrap">Дата до</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="min-w-[120px] max-w-[150px] px-4">
+              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[120px] !max-w-[150px] !px-4 !whitespace-nowrap">Дата до</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="!min-w-[120px] !max-w-[150px] !px-4">
                 {{ formatDate(reservation.dateTo) }}
               </mat-cell>
             </ng-container>
 
             <!-- Total Price Column -->
             <ng-container matColumnDef="totalPrice">
-              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px] max-w-[150px] px-4 whitespace-nowrap">Обща цена</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="text-green-600 font-medium min-w-[120px] max-w-[150px] px-4">
+              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[120px] !max-w-[150px] !px-4 !whitespace-nowrap">Обща цена</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="!text-green-600 !font-medium !min-w-[120px] !max-w-[150px] !px-4">
                 {{ formatPrice(reservation.totalPrice) }}
               </mat-cell>
             </ng-container>
 
             <!-- Status Column -->
             <ng-container matColumnDef="reservationStatusName">
-              <mat-header-cell *matHeaderCellDef class="font-semibold min-w-[120px] max-w-[150px] px-4 whitespace-nowrap">Статус</mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="min-w-[120px] max-w-[150px] px-4">
+              <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[120px] !max-w-[150px] !px-4 !whitespace-nowrap">Статус</mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="!min-w-[120px] !max-w-[150px] !px-4">
                 <span class="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
                   {{ reservation.reservationStatusName || 'Не е указан' }}
                 </span>
@@ -382,15 +372,15 @@
 
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
-              <mat-header-cell *matHeaderCellDef class="w-32 min-w-[120px] max-w-[120px] text-right sticky right-0 bg-gray-100 z-10 border-l border-gray-200"></mat-header-cell>
-              <mat-cell *matCellDef="let reservation" class="w-32 min-w-[120px] max-w-[120px] sticky right-0 bg-white z-10 border-l border-gray-100">
+              <mat-header-cell *matHeaderCellDef class="!w-32 !min-w-[150px] !max-w-[150px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"></mat-header-cell>
+              <mat-cell *matCellDef="let reservation" class="!w-32 !min-w-[150px] !max-w-[150px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100">
                 <div class="flex space-x-1">
                   <button 
                     mat-icon-button 
-                    (click)="hideRow(reservation)"
-                    class="text-gray-600 hover:text-orange-600"
-                    matTooltip="Скрий ред">
-                    <mat-icon>visibility_off</mat-icon>
+                    (click)="editReservation(reservation)"
+                    class="text-gray-600 hover:text-blue-600"
+                    matTooltip="Преглед">
+                    <mat-icon>visibility</mat-icon>
                   </button>
                   <button 
                     mat-icon-button 
@@ -410,10 +400,8 @@
               </mat-cell>
             </ng-container>
 
-            <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;" 
-                     [style.display]="isRowHidden(row) ? 'none' : ''"
-                     class="hover:bg-gray-50 cursor-pointer"></mat-row>
+            <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 cursor-pointer"></mat-row>
           </mat-table>
         </div>
       </div>
