@@ -94,13 +94,23 @@
     
     <div class="bg-white rounded-lg shadow-sm border mb-6">
       <div class="p-4 sm:p-6">
-        <form [formGroup]="searchForm" class="flex items-center space-x-4">
-          <mat-form-field class="flex-1">
-            <mat-label>Търсене</mat-label>
-            <input matInput formControlName="searchTerm" placeholder="Търсене по име, имейл или телефон">
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
-        </form>
+        <div class="flex items-center justify-between space-x-4">
+          <form [formGroup]="searchForm" class="flex-1">
+            <mat-form-field class="w-full">
+              <mat-label>Търсене</mat-label>
+              <input matInput formControlName="searchTerm" placeholder="Търсене по име, имейл или телефон">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </form>
+          <button 
+            mat-stroked-button 
+            (click)="showAllRows()"
+            [disabled]="hiddenRows.size === 0"
+            class="whitespace-nowrap">
+            <mat-icon class="mr-2">visibility</mat-icon>
+            Покажи всички ({{ hiddenRows.size }})
+          </button>
+        </div>
       </div>
     </div>
 
@@ -153,6 +163,13 @@
                 </button>
                 <button 
                   mat-icon-button 
+                  (click)="hideRow(client)"
+                  class="text-gray-600 hover:text-orange-600"
+                  matTooltip="Скрий ред">
+                  <mat-icon>visibility_off</mat-icon>
+                </button>
+                <button 
+                  mat-icon-button 
                   (click)="editClient(client)"
                   class="text-gray-600 hover:text-green-600"
                   matTooltip="Редактиране">
@@ -170,11 +187,13 @@
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 cursor-pointer"></mat-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" 
+                   [style.display]="isRowHidden(row) ? 'none' : ''"
+                   class="hover:bg-gray-50 cursor-pointer"></mat-row>
           
           <!-- Expandable row content -->
           <ng-container *ngFor="let client of dataSource.data">
-            <mat-row *ngIf="isRowExpanded(client)" class="bg-gray-50">
+            <mat-row *ngIf="isRowExpanded(client) && !isRowHidden(client)" class="bg-gray-50">
               <mat-cell [attr.colspan]="displayedColumns.length" class="px-4 py-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div><strong>ID:</strong> {{ client.id }}</div>

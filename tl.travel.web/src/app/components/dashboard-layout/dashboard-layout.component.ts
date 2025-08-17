@@ -66,9 +66,37 @@ export class DashboardLayoutComponent implements OnInit {
   }
 
   getUserInitial(): string {
+    // Try to get initial from name first
     if (this.currentUser?.name) {
       return this.currentUser.name.charAt(0).toUpperCase();
     }
+    
+    // If no name, try to get from email
+    if (this.currentUser?.email) {
+      return this.currentUser.email.charAt(0).toUpperCase();
+    }
+    
+    // Check if we have a token and try to decode user info
+    const token = this.authService.getToken();
+    if (token) {
+      try {
+        // Try to get user info from auth service
+        this.authService.readToken().subscribe({
+          next: (userInfo) => {
+            if (userInfo?.email) {
+              this.currentUser = { ...this.currentUser, email: userInfo.email };
+              return userInfo.email.charAt(0).toUpperCase();
+            }
+          },
+          error: () => {
+            // Ignore errors, fallback to 'U'
+          }
+        });
+      } catch (error) {
+        // Ignore token parsing errors
+      }
+    }
+    
     return 'U';
   }
 }

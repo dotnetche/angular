@@ -61,6 +61,7 @@ export class ClientsComponent implements OnInit {
   pageSizeOptions = [10, 25, 50, 100];
 
   expandedRows = new Set<number>();
+  hiddenRows = new Set<number>();
 
   constructor(
     private fb: FormBuilder,
@@ -343,5 +344,21 @@ export class ClientsComponent implements OnInit {
 
   isRowExpanded(client: ClientDTO): boolean {
     return client.id ? this.expandedRows.has(client.id) : false;
+  }
+
+  hideRow(client: ClientDTO): void {
+    if (client.id) {
+      this.hiddenRows.add(client.id);
+      // Also remove from selection if hidden
+      this.selection.deselect(client);
+    }
+  }
+
+  isRowHidden(client: ClientDTO): boolean {
+    return client.id ? this.hiddenRows.has(client.id) : false;
+  }
+
+  showAllRows(): void {
+    this.hiddenRows.clear();
   }
 }
