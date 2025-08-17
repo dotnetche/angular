@@ -104,14 +104,14 @@
           <mat-table [dataSource]="dataSource" class="w-full min-w-max">
           
           <ng-container matColumnDef="select">
-            <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200">
+            <mat-header-cell *matHeaderCellDef class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200">
               <mat-checkbox 
                 (change)="$event ? masterToggle() : null"
                 [checked]="selection.hasValue() && isAllSelected()"
                 [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
             </mat-header-cell>
-            <mat-cell *matCellDef="let row" class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100">
+            <mat-cell *matCellDef="let row" class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100">
               <mat-checkbox 
                 (click)="$event.stopPropagation()"
                 (change)="$event ? selection.toggle(row) : null"
@@ -122,24 +122,24 @@
 
           
           <ng-container matColumnDef="code">
-            <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[100px] !max-w-[150px] !px-4 !whitespace-nowrap">Код</mat-header-cell>
-            <mat-cell *matCellDef="let feedingType" class="!font-mono !font-medium !text-blue-600 !min-w-[100px] !max-w-[150px] !px-4">
+            <mat-header-cell *matHeaderCellDef class="!font-semibold !px-4 !whitespace-nowrap">Код</mat-header-cell>
+            <mat-cell *matCellDef="let feedingType" class="!font-mono !font-medium !text-blue-600 !px-4">
               <div class="truncate" [title]="feedingType.code">{{ feedingType.code }}</div>
             </mat-cell>
           </ng-container>
 
           
           <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef class="!font-semibold !min-w-[200px] !max-w-[300px] !px-4 !whitespace-nowrap">Име</mat-header-cell>
-            <mat-cell *matCellDef="let feedingType" class="!font-medium !min-w-[200px] !max-w-[300px] !px-4">
+            <mat-header-cell *matHeaderCellDef class="!font-semibold !px-4 !whitespace-nowrap">Име</mat-header-cell>
+            <mat-cell *matCellDef="let feedingType" class="!font-medium !px-4">
               <div class="truncate" [title]="feedingType.name">{{ feedingType.name }}</div>
             </mat-cell>
           </ng-container>
 
           
           <ng-container matColumnDef="actions">
-            <mat-header-cell *matHeaderCellDef class="!w-32 !min-w-[120px] !max-w-[120px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"></mat-header-cell>
-            <mat-cell *matCellDef="let feedingType" class="!w-32 !min-w-[120px] !max-w-[120px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100">
+            <mat-header-cell *matHeaderCellDef class="!w-32 !min-w-[150px] !max-w-[150px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"></mat-header-cell>
+            <mat-cell *matCellDef="let feedingType" class="!w-32 !min-w-[150px] !max-w-[150px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100">
               <div class="flex space-x-1">
                 <button 
                   mat-icon-button 

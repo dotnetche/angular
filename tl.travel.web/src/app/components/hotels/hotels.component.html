@@ -151,7 +151,7 @@
           <ng-container matColumnDef="select">
             <mat-header-cell
               *matHeaderCellDef
-              class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200"
+              class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-gray-50 !z-20 !border-r !border-gray-200"
             >
               <mat-checkbox
                 (change)="$event ? masterToggle() : null"
@@ -162,7 +162,7 @@
             </mat-header-cell>
             <mat-cell
               *matCellDef="let row"
-              class="!w-12 !min-w-[48px] !max-w-[48px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100"
+              class="!w-12 !min-w-[80px] !max-w-[80px] !flex-shrink-0 !sticky !left-0 !bg-white !z-20 !border-r !border-gray-100"
             >
               <mat-checkbox
                 (click)="$event.stopPropagation()"
@@ -206,11 +206,11 @@
           <ng-container matColumnDef="actions">
             <mat-header-cell
               *matHeaderCellDef
-              class="!w-32 !min-w-[120px] !max-w-[120px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"
+              class="!w-32 !min-w-[150px] !max-w-[150px] !text-right !sticky !right-0 !bg-gray-50 !z-10 !border-l !border-gray-200"
             ></mat-header-cell>
             <mat-cell
               *matCellDef="let hotel"
-              class="!w-32 !min-w-[120px] !max-w-[120px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100"
+              class="!w-32 !min-w-[150px] !max-w-[150px] !sticky !right-0 !bg-white !z-10 !border-l !border-gray-100"
             >
               <div class="flex space-x-1">
                 <button
