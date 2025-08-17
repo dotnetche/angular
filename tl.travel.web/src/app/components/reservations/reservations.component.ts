@@ -442,6 +442,7 @@ export class ReservationsComponent implements OnInit {
   }
 
   hideRow(reservation: ReservationDTO): void {
+  }
 
   compareById(o1: any, o2: any): boolean {
     return o1 === o2;

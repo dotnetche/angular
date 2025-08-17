@@ -296,6 +296,7 @@ export class HotelRoomsComponent implements OnInit {
   }
 
   hideRow(room: HotelRoomDTO): void {
+  }
 
   compareById(o1: any, o2: any): boolean {
     return o1 === o2;

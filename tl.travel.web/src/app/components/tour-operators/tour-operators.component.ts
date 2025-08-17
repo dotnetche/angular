@@ -279,4 +279,5 @@ export class TourOperatorsComponent implements OnInit {
   }
 
   hideRow(operator: TourOperatorDTO): void {
+  }
 }

@@ -258,4 +258,5 @@ export class PaymentTypesComponent implements OnInit {
   }
 
   hideRow(paymentType: PaymentTypeDTO): void {
+  }
 }

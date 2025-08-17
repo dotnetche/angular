@@ -259,4 +259,5 @@ export class FeedingTypesComponent implements OnInit {
   }
 
   hideRow(feedingType: FeedingTypeDTO): void {
+  }
 }
