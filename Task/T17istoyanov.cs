@@ -9,8 +9,6 @@ public class T17istoyanov : IT17
 {
     private int n;
     private int[][] matrix;
-    private List<(int r, int c)> empties = new List<(int, int)>();
-    private HashSet<int> used = new HashSet<int>();
     private int targetSum;
 
     public int[][] Solve(int[][] ms)
@@ -20,27 +18,287 @@ public class T17istoyanov : IT17
 
         n = ms.Length;
         matrix = CloneMatrix(ms);
-        
-        // Find empty positions and used numbers
-        FindEmptyPositionsAndUsedNumbers();
-        
-        // Calculate target sum using magic square formula
         targetSum = CalculateMagicSquareSum();
+
+        // Use linear equation system approach
+        var solution = SolveWithLinearSystem();
         
-        // Use different strategies based on matrix size
-        if (n <= 3)
+        if (solution == null)
+            throw new Exception("No solution found");
+            
+        return solution;
+    }
+
+    private int[][] SolveWithLinearSystem()
+    {
+        // Build linear system
+        var liSys = new LiSys();
+        
+        // (1.1) Size-related equations (magic square rules)
+        AddSizeRelatedEquations(liSys);
+        
+        // (1.2) Task-related equations (known values)
+        AddTaskRelatedEquations(liSys);
+        
+        // Solve the system
+        liSys.Solve();
+        
+        // Check solution type
+        var solutionType = liSys.GetSolutionType();
+        
+        switch (solutionType)
         {
-            return SolveSmallMatrix();
+            case SolutionType.ExactSolution:
+                return ExtractSolutionFromSystem(liSys);
+                
+            case SolutionType.NoSolution:
+                return null;
+                
+            case SolutionType.MultipleSolutions:
+                // Try to find a valid solution by trying different values for free variables
+                return SolveMultipleSolutions(liSys);
+                
+            default:
+                return null;
         }
-        else
+    }
+
+    private void AddSizeRelatedEquations(LiSys liSys)
+    {
+        // Rows: A1 + B1 + C1 = Sum
+        for (int i = 0; i < n; i++)
         {
-            return SolveLargeMatrixWithFormula();
+            var eq = new Eq();
+            for (int j = 0; j < n; j++)
+            {
+                eq.Term(1, GetCellName(i, j));
+            }
+            eq.Term(-1, "Sum");
+            liSys.Add(eq);
         }
+        
+        // Columns: A1 + A2 + A3 = Sum
+        for (int j = 0; j < n; j++)
+        {
+            var eq = new Eq();
+            for (int i = 0; i < n; i++)
+            {
+                eq.Term(1, GetCellName(i, j));
+            }
+            eq.Term(-1, "Sum");
+            liSys.Add(eq);
+        }
+        
+        // Main diagonal: A1 + B2 + C3 = Sum
+        var diagEq = new Eq();
+        for (int i = 0; i < n; i++)
+        {
+            diagEq.Term(1, GetCellName(i, i));
+        }
+        diagEq.Term(-1, "Sum");
+        liSys.Add(diagEq);
+        
+        // Anti-diagonal: A3 + B2 + C1 = Sum
+        var antiDiagEq = new Eq();
+        for (int i = 0; i < n; i++)
+        {
+            antiDiagEq.Term(1, GetCellName(i, n - 1 - i));
+        }
+        antiDiagEq.Term(-1, "Sum");
+        liSys.Add(antiDiagEq);
+        
+        // Sum constraint: Sum = targetSum
+        var sumEq = new Eq();
+        sumEq.Term(1, "Sum").Term(-targetSum, null);
+        liSys.Add(sumEq);
+    }
+
+    private void AddTaskRelatedEquations(LiSys liSys)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (matrix[i][j] != 0)
+                {
+                    // A1 = 8 => A1 - 8 = 0
+                    var eq = new Eq();
+                    eq.Term(1, GetCellName(i, j)).Term(-matrix[i][j], null);
+                    liSys.Add(eq);
+                }
+            }
+        }
+    }
+
+    private string GetCellName(int row, int col)
+    {
+        char colChar = (char)('A' + col);
+        return $"{colChar}{row + 1}";
+    }
+
+    private int[][] ExtractSolutionFromSystem(LiSys liSys)
+    {
+        var result = CloneMatrix(matrix);
+        
+        foreach (var eq in liSys.GetEquations())
+        {
+            if (eq.IsVariableAssignment(out string variable, out double value))
+            {
+                var (row, col) = ParseCellName(variable);
+                if (row >= 0 && col >= 0)
+                {
+                    result[row][col] = (int)Math.Round(value);
+                }
+            }
+        }
+        
+        return result;
+    }
+
+    private int[][] SolveMultipleSolutions(LiSys liSys)
+    {
+        // Get free variables and try different combinations
+        var freeVars = liSys.GetFreeVariables();
+        var availableNumbers = GetAvailableNumbers();
+        
+        return TryAssignFreeVariables(liSys, freeVars, availableNumbers, 0);
+    }
+
+    private int[][] TryAssignFreeVariables(LiSys liSys, List<string> freeVars, List<int> available, int index)
+    {
+        if (index == freeVars.Count)
+        {
+            var candidate = ExtractSolutionFromSystem(liSys);
+            if (IsValidMagicSquare(candidate))
+                return candidate;
+            return null;
+        }
+        
+        string variable = freeVars[index];
+        
+        foreach (int value in available)
+        {
+            // Try assigning this value to the free variable
+            var tempSys = liSys.Clone();
+            var assignEq = new Eq();
+            assignEq.Term(1, variable).Term(-value, null);
+            tempSys.Add(assignEq);
+            tempSys.Solve();
+            
+            if (tempSys.GetSolutionType() != SolutionType.NoSolution)
+            {
+                var newAvailable = available.Where(x => x != value).ToList();
+                var result = TryAssignFreeVariables(tempSys, freeVars.Skip(1).ToList(), newAvailable, 0);
+                if (result != null)
+                    return result;
+            }
+        }
+        
+        return null;
+    }
+
+    private List<int> GetAvailableNumbers()
+    {
+        var used = new HashSet<int>();
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (matrix[i][j] != 0)
+                    used.Add(matrix[i][j]);
+            }
+        }
+        
+        var available = new List<int>();
+        for (int i = 1; i <= n * n; i++)
+        {
+            if (!used.Contains(i))
+                available.Add(i);
+        }
+        
+        return available;
+    }
+
+    private (int row, int col) ParseCellName(string cellName)
+    {
+        if (string.IsNullOrEmpty(cellName) || cellName.Length < 2)
+            return (-1, -1);
+            
+        char colChar = cellName[0];
+        if (colChar < 'A' || colChar > 'Z')
+            return (-1, -1);
+            
+        if (!int.TryParse(cellName.Substring(1), out int row))
+            return (-1, -1);
+            
+        return (row - 1, colChar - 'A');
+    }
+
+    private bool IsValidMagicSquare(int[][] candidate)
+    {
+        if (candidate == null) return false;
+        
+        // Check for zeros and duplicates
+        var allElements = candidate.SelectMany(row => row).ToList();
+        if (allElements.Any(x => x == 0) || allElements.Count != allElements.Distinct().Count())
+            return false;
+        
+        // Check if all elements are in range 1 to n²
+        if (allElements.Any(x => x < 1 || x > n * n))
+            return false;
+        
+        return IsMagic(candidate);
+    }
+
+    private bool IsMagic(int[][] candidate)
+    {
+        // Check rows
+        for (int i = 0; i < n; i++)
+        {
+            if (candidate[i].Sum() != targetSum)
+                return false;
+        }
+        
+        // Check columns
+        for (int j = 0; j < n; j++)
+        {
+            int colSum = 0;
+            for (int i = 0; i < n; i++)
+            {
+                colSum += candidate[i][j];
+            }
+            if (colSum != targetSum)
+                return false;
+        }
+        
+        // Check main diagonal
+        int diagSum = 0;
+        for (int i = 0; i < n; i++)
+        {
+            diagSum += candidate[i][i];
+        }
+        if (diagSum != targetSum)
+            return false;
+        
+        // Check anti-diagonal
+        int antiDiagSum = 0;
+        for (int i = 0; i < n; i++)
+        {
+            antiDiagSum += candidate[i][n - 1 - i];
+        }
+        if (antiDiagSum != targetSum)
+            return false;
+        
+        return true;
+    }
+
+    public bool IsMagic()
+    {
+        return IsMagic(matrix);
     }
 
     private int CalculateMagicSquareSum()
     {
-        // Magic square formula: M = n(n² + 1) / 2
         return n * (n * n + 1) / 2;
     }
 
@@ -54,432 +312,172 @@ public class T17istoyanov : IT17
         }
         return clone;
     }
+}
 
-    private void FindEmptyPositionsAndUsedNumbers()
+// Equation class for building linear equations
+public class Eq
+{
+    private Dictionary<string, double> terms = new Dictionary<string, double>();
+    private double constant = 0;
+
+    public Eq Term(double coefficient, string variable)
     {
-        empties.Clear();
-        used.Clear();
-        
-        for (int i = 0; i < n; i++)
+        if (variable == null)
         {
-            for (int j = 0; j < n; j++)
-            {
-                if (matrix[i][j] == 0)
-                    empties.Add((i, j));
-                else
-                    used.Add(matrix[i][j]);
-            }
+            constant += coefficient;
         }
-    }
-
-    private int[][] SolveSmallMatrix()
-    {
-        // Use backtracking for small matrices (n <= 3)
-        if (TryBacktrack(0))
-            return matrix;
-        
-        throw new Exception("No solution found for small matrix");
-    }
-
-    private bool TryBacktrack(int idx)
-    {
-        if (idx == empties.Count)
-            return IsMagic();
-
-        var (r, c) = empties[idx];
-        
-        // Try numbers from 1 to n*n
-        for (int val = 1; val <= n * n; val++)
+        else
         {
-            if (used.Contains(val)) continue;
+            if (terms.ContainsKey(variable))
+                terms[variable] += coefficient;
+            else
+                terms[variable] = coefficient;
+        }
+        return this;
+    }
 
-            matrix[r][c] = val;
-            used.Add(val);
+    public Dictionary<string, double> GetTerms() => new Dictionary<string, double>(terms);
+    public double GetConstant() => constant;
 
-            if (IsCurrentlyValid(r, c) && TryBacktrack(idx + 1))
+    public bool IsVariableAssignment(out string variable, out double value)
+    {
+        variable = null;
+        value = 0;
+        
+        if (terms.Count == 1 && Math.Abs(constant) > 1e-10)
+        {
+            var term = terms.First();
+            if (Math.Abs(term.Value - 1.0) < 1e-10)
+            {
+                variable = term.Key;
+                value = -constant;
                 return true;
-
-            used.Remove(val);
-            matrix[r][c] = 0;
+            }
         }
-
+        
         return false;
     }
 
-    private int[][] SolveLargeMatrixWithFormula()
+    public bool IsConflict()
     {
-        // For large matrices, use constraint satisfaction with magic square formula
-        return SolveWithConstraintSatisfaction();
+        return terms.Count == 0 && Math.Abs(constant) > 1e-10;
     }
 
-    private int[][] SolveWithConstraintSatisfaction()
+    public bool HasMultipleVariables()
     {
-        // Create list of available numbers
-        var availableNumbers = new List<int>();
-        for (int i = 1; i <= n * n; i++)
-        {
-            if (!used.Contains(i))
-                availableNumbers.Add(i);
-        }
-
-        // Sort empty positions by priority (most constrained first)
-        var prioritizedEmpties = empties.OrderByDescending(pos => GetConstraintPriority(pos.r, pos.c)).ToList();
-
-        // Use constraint propagation and direct calculation where possible
-        if (SolveWithDirectCalculation(prioritizedEmpties, availableNumbers))
-            return matrix;
-
-        throw new Exception("No solution found for large matrix");
+        return terms.Count > 1;
     }
 
-    private bool SolveWithDirectCalculation(List<(int r, int c)> positions, List<int> available)
+    public Eq Clone()
     {
-        // Try to solve positions that can be directly calculated
-        bool progress = true;
-        while (progress && positions.Count > 0)
+        var clone = new Eq();
+        clone.terms = new Dictionary<string, double>(terms);
+        clone.constant = constant;
+        return clone;
+    }
+}
+
+// Linear System class for building and solving systems of linear equations
+public class LiSys
+{
+    private List<Eq> equations = new List<Eq>();
+
+    public LiSys Add(Eq equation)
+    {
+        equations.Add(equation);
+        return this;
+    }
+
+    public void Solve()
+    {
+        // Gaussian elimination with partial pivoting
+        bool changed = true;
+        while (changed)
         {
-            progress = false;
+            changed = false;
             
-            for (int i = positions.Count - 1; i >= 0; i--)
+            // Look for equations with single variables
+            for (int i = 0; i < equations.Count; i++)
             {
-                var (r, c) = positions[i];
-                var requiredValue = GetRequiredValue(r, c);
-                
-                if (requiredValue.HasValue && available.Contains(requiredValue.Value))
+                var eq = equations[i];
+                if (eq.IsVariableAssignment(out string variable, out double value))
                 {
-                    matrix[r][c] = requiredValue.Value;
-                    available.Remove(requiredValue.Value);
-                    positions.RemoveAt(i);
-                    progress = true;
-                }
-            }
-        }
-
-        // If all positions solved, we're done
-        if (positions.Count == 0)
-            return IsMagic();
-
-        // For remaining positions, use smart constraint-based approach
-        return SolveRemainingWithConstraints(positions, available, 0);
-    }
-
-    private int? GetRequiredValue(int row, int col)
-    {
-        // Check if this position can be directly calculated from row constraint
-        int rowSum = 0;
-        int rowZeros = 0;
-        int zeroCol = -1;
-        
-        for (int j = 0; j < n; j++)
-        {
-            if (matrix[row][j] == 0)
-            {
-                rowZeros++;
-                zeroCol = j;
-            }
-            else
-                rowSum += matrix[row][j];
-        }
-        
-        if (rowZeros == 1 && zeroCol == col)
-            return targetSum - rowSum;
-
-        // Check if this position can be directly calculated from column constraint
-        int colSum = 0;
-        int colZeros = 0;
-        int zeroRow = -1;
-        
-        for (int i = 0; i < n; i++)
-        {
-            if (matrix[i][col] == 0)
-            {
-                colZeros++;
-                zeroRow = i;
-            }
-            else
-                colSum += matrix[i][col];
-        }
-        
-        if (colZeros == 1 && zeroRow == row)
-            return targetSum - colSum;
-
-        // Check main diagonal
-        if (row == col)
-        {
-            int diagSum = 0;
-            int diagZeros = 0;
-            int zeroPos = -1;
-            
-            for (int i = 0; i < n; i++)
-            {
-                if (matrix[i][i] == 0)
-                {
-                    diagZeros++;
-                    zeroPos = i;
-                }
-                else
-                    diagSum += matrix[i][i];
-            }
-            
-            if (diagZeros == 1 && zeroPos == row)
-                return targetSum - diagSum;
-        }
-
-        // Check anti-diagonal
-        if (row + col == n - 1)
-        {
-            int antiDiagSum = 0;
-            int antiDiagZeros = 0;
-            int zeroPos = -1;
-            
-            for (int i = 0; i < n; i++)
-            {
-                if (matrix[i][n - 1 - i] == 0)
-                {
-                    antiDiagZeros++;
-                    zeroPos = i;
-                }
-                else
-                    antiDiagSum += matrix[i][n - 1 - i];
-            }
-            
-            if (antiDiagZeros == 1 && zeroPos == row)
-                return targetSum - antiDiagSum;
-        }
-
-        return null;
-    }
-
-    private bool SolveRemainingWithConstraints(List<(int r, int c)> positions, List<int> available, int idx)
-    {
-        if (idx == positions.Count)
-            return IsMagic();
-
-        var (r, c) = positions[idx];
-        
-        // Get valid candidates for this position
-        var candidates = GetValidCandidates(r, c, available);
-        
-        foreach (int val in candidates)
-        {
-            matrix[r][c] = val;
-            available.Remove(val);
-
-            if (IsCurrentlyValid(r, c))
-            {
-                if (SolveRemainingWithConstraints(positions, available, idx + 1))
-                    return true;
-            }
-
-            available.Add(val);
-            available.Sort();
-            matrix[r][c] = 0;
-        }
-
-        return false;
-    }
-
-    private List<int> GetValidCandidates(int row, int col, List<int> available)
-    {
-        var candidates = new List<int>();
-        
-        foreach (int val in available)
-        {
-            if (CanPlaceValue(row, col, val))
-                candidates.Add(val);
-        }
-        
-        return candidates;
-    }
-
-    private bool CanPlaceValue(int row, int col, int val)
-    {
-        // Check row constraint
-        int rowSum = val;
-        int rowZeros = 0;
-        for (int j = 0; j < n; j++)
-        {
-            if (j != col)
-            {
-                if (matrix[row][j] == 0)
-                    rowZeros++;
-                else
-                    rowSum += matrix[row][j];
-            }
-        }
-        
-        if (rowZeros == 0 && rowSum != targetSum) return false;
-        if (rowZeros > 0 && rowSum >= targetSum) return false;
-        
-        // Check column constraint
-        int colSum = val;
-        int colZeros = 0;
-        for (int i = 0; i < n; i++)
-        {
-            if (i != row)
-            {
-                if (matrix[i][col] == 0)
-                    colZeros++;
-                else
-                    colSum += matrix[i][col];
-            }
-        }
-        
-        if (colZeros == 0 && colSum != targetSum) return false;
-        if (colZeros > 0 && colSum >= targetSum) return false;
-        
-        // Check main diagonal if applicable
-        if (row == col)
-        {
-            int diagSum = val;
-            int diagZeros = 0;
-            for (int i = 0; i < n; i++)
-            {
-                if (i != row)
-                {
-                    if (matrix[i][i] == 0)
-                        diagZeros++;
-                    else
-                        diagSum += matrix[i][i];
+                    // Substitute this variable in all other equations
+                    for (int j = 0; j < equations.Count; j++)
+                    {
+                        if (i != j)
+                        {
+                            SubstituteVariable(equations[j], variable, value);
+                        }
+                    }
+                    changed = true;
                 }
             }
             
-            if (diagZeros == 0 && diagSum != targetSum) return false;
-            if (diagZeros > 0 && diagSum >= targetSum) return false;
+            // Remove redundant equations (0 = 0)
+            equations.RemoveAll(eq => eq.GetTerms().Count == 0 && Math.Abs(eq.GetConstant()) < 1e-10);
         }
-        
-        // Check anti-diagonal if applicable
-        if (row + col == n - 1)
+    }
+
+    private void SubstituteVariable(Eq equation, string variable, double value)
+    {
+        var terms = equation.GetTerms();
+        if (terms.ContainsKey(variable))
         {
-            int antiDiagSum = val;
-            int antiDiagZeros = 0;
-            for (int i = 0; i < n; i++)
+            double coeff = terms[variable];
+            equation.Term(-coeff * value, null); // Add to constant
+            equation.Term(-coeff, variable); // Remove variable term
+        }
+    }
+
+    public SolutionType GetSolutionType()
+    {
+        // Check for conflicts
+        if (equations.Any(eq => eq.IsConflict()))
+            return SolutionType.NoSolution;
+        
+        // Check if all remaining equations are variable assignments
+        if (equations.All(eq => eq.IsVariableAssignment(out _, out _) || 
+                               (eq.GetTerms().Count == 0 && Math.Abs(eq.GetConstant()) < 1e-10)))
+            return SolutionType.ExactSolution;
+        
+        return SolutionType.MultipleSolutions;
+    }
+
+    public List<Eq> GetEquations() => equations;
+
+    public List<string> GetFreeVariables()
+    {
+        var assignedVars = new HashSet<string>();
+        var allVars = new HashSet<string>();
+        
+        foreach (var eq in equations)
+        {
+            foreach (var term in eq.GetTerms())
             {
-                if (i != row)
-                {
-                    if (matrix[i][n - 1 - i] == 0)
-                        antiDiagZeros++;
-                    else
-                        antiDiagSum += matrix[i][n - 1 - i];
-                }
+                allVars.Add(term.Key);
             }
             
-            if (antiDiagZeros == 0 && antiDiagSum != targetSum) return false;
-            if (antiDiagZeros > 0 && antiDiagSum >= targetSum) return false;
-        }
-        
-        return true;
-    }
-
-    private int GetConstraintPriority(int row, int col)
-    {
-        int priority = 2; // row and column
-        
-        if (row == col) priority++; // main diagonal
-        if (row + col == n - 1) priority++; // anti-diagonal
-        
-        return priority;
-    }
-
-    private bool IsCurrentlyValid(int row, int col)
-    {
-        // Check if current placement doesn't violate any completed lines
-        
-        // Check row
-        if (matrix[row].All(x => x != 0) && matrix[row].Sum() != targetSum)
-            return false;
-
-        // Check column
-        int colSum = 0;
-        bool colComplete = true;
-        for (int i = 0; i < n; i++)
-        {
-            if (matrix[i][col] == 0)
-                colComplete = false;
-            colSum += matrix[i][col];
-        }
-        if (colComplete && colSum != targetSum)
-            return false;
-
-        // Check main diagonal
-        if (row == col)
-        {
-            int diagSum = 0;
-            bool diagComplete = true;
-            for (int i = 0; i < n; i++)
+            if (eq.IsVariableAssignment(out string variable, out _))
             {
-                if (matrix[i][i] == 0)
-                    diagComplete = false;
-                diagSum += matrix[i][i];
+                assignedVars.Add(variable);
             }
-            if (diagComplete && diagSum != targetSum)
-                return false;
         }
-
-        // Check anti-diagonal
-        if (row + col == n - 1)
-        {
-            int antiDiagSum = 0;
-            bool antiDiagComplete = true;
-            for (int i = 0; i < n; i++)
-            {
-                if (matrix[i][n - 1 - i] == 0)
-                    antiDiagComplete = false;
-                antiDiagSum += matrix[i][n - 1 - i];
-            }
-            if (antiDiagComplete && antiDiagSum != targetSum)
-                return false;
-        }
-
-        return true;
+        
+        return allVars.Except(assignedVars).ToList();
     }
 
-    public bool IsMagic()
+    public LiSys Clone()
     {
-        if (matrix == null || matrix.Length == 0)
-            return false;
-
-        // Check for duplicates and zeros
-        var allElements = matrix.SelectMany(row => row).ToList();
-        if (allElements.Any(x => x == 0) || allElements.Count != allElements.Distinct().Count())
-            return false;
-
-        // Check all rows
-        for (int i = 0; i < n; i++)
-        {
-            if (matrix[i].Sum() != targetSum)
-                return false;
-        }
-
-        // Check all columns
-        for (int j = 0; j < n; j++)
-        {
-            int colSum = 0;
-            for (int i = 0; i < n; i++)
-            {
-                colSum += matrix[i][j];
-            }
-            if (colSum != targetSum)
-                return false;
-        }
-
-        // Check main diagonal
-        int diagSum = 0;
-        for (int i = 0; i < n; i++)
-        {
-            diagSum += matrix[i][i];
-        }
-        if (diagSum != targetSum)
-            return false;
-
-        // Check anti-diagonal
-        int antiDiagSum = 0;
-        for (int i = 0; i < n; i++)
-        {
-            antiDiagSum += matrix[i][n - 1 - i];
-        }
-        if (antiDiagSum != targetSum)
-            return false;
-
-        return true;
+        var clone = new LiSys();
+        clone.equations = equations.Select(eq => eq.Clone()).ToList();
+        return clone;
     }
+}
+
+public enum SolutionType
+{
+    ExactSolution,    // (4.1) exactly one solution
+    NoSolution,       // (4.2) no solution (conflict)
+    MultipleSolutions // (4.3) multiple solutions
+}
