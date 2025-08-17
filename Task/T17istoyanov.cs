@@ -157,11 +157,357 @@ public class T17istoyanov : IT17
 
     private int[][] SolveMultipleSolutions(LiSys liSys)
     {
-        // Get free variables and try different combinations
-        var freeVars = liSys.GetFreeVariables();
-        var availableNumbers = GetAvailableNumbers();
+        // For large matrices with many free variables, use mathematical construction
+        if (n >= 4 && liSys.GetFreeVariables().Count > n)
+        {
+            return SolveUsingMagicSquareConstruction();
+        }
+        else
+        {
+            // For smaller cases, try systematic assignment
+            var freeVars = liSys.GetFreeVariables();
+            var availableNumbers = GetAvailableNumbers();
+            
+            return TryAssignFreeVariablesOptimized(liSys, freeVars, availableNumbers);
+        }
+    }
+
+    private int[][] SolveUsingMagicSquareConstruction()
+    {
+        // Use Siamese method for odd n, or other construction methods
+        if (n % 2 == 1)
+        {
+            return ConstructOddMagicSquare();
+        }
+        else if (n % 4 == 0)
+        {
+            return ConstructDoublyEvenMagicSquare();
+        }
+        else
+        {
+            return ConstructSinglyEvenMagicSquare();
+        }
+    }
+
+    private int[][] ConstructOddMagicSquare()
+    {
+        // Siamese method for odd n
+        var result = new int[n][];
+        for (int i = 0; i < n; i++)
+            result[i] = new int[n];
+
+        // Copy known values first
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                result[i][j] = matrix[i][j];
+            }
+        }
+
+        // If we have constraints, try to build around them
+        if (GetAvailableNumbers().Count < n * n - 5)
+        {
+            // Too many constraints for construction method, fall back to optimized search
+            return TryConstrainedConstruction(result);
+        }
+
+        // Standard Siamese method
+        var tempSquare = new int[n][];
+        for (int i = 0; i < n; i++)
+            tempSquare[i] = new int[n];
+
+        int row = 0;
+        int col = n / 2;
+
+        for (int num = 1; num <= n * n; num++)
+        {
+            tempSquare[row][col] = num;
+
+            int newRow = (row - 1 + n) % n;
+            int newCol = (col + 1) % n;
+
+            if (tempSquare[newRow][newCol] != 0)
+            {
+                row = (row + 1) % n;
+            }
+            else
+            {
+                row = newRow;
+                col = newCol;
+            }
+        }
+
+        // Try to adapt to constraints
+        return AdaptMagicSquareToConstraints(tempSquare, result);
+    }
+
+    private int[][] ConstructDoublyEvenMagicSquare()
+    {
+        // For n divisible by 4
+        var result = new int[n][];
+        for (int i = 0; i < n; i++)
+            result[i] = new int[n];
+
+        // Fill with natural order
+        int num = 1;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                result[i][j] = num++;
+            }
+        }
+
+        // Apply doubly even transformation
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                bool inMainDiag = (i % 4 == j % 4);
+                bool inAntiDiag = ((i % 4) + (j % 4) == 3);
+                
+                if (inMainDiag || inAntiDiag)
+                {
+                    result[i][j] = n * n + 1 - result[i][j];
+                }
+            }
+        }
+
+        return AdaptMagicSquareToConstraints(result, matrix);
+    }
+
+    private int[][] ConstructSinglyEvenMagicSquare()
+    {
+        // For n = 4k+2, use LUX method
+        int half = n / 2;
+        var oddSquare = ConstructOddMagicSquareOfSize(half);
         
-        return TryAssignFreeVariables(liSys, freeVars, availableNumbers, 0);
+        var result = new int[n][];
+        for (int i = 0; i < n; i++)
+            result[i] = new int[n];
+
+        // Fill quadrants
+        for (int i = 0; i < half; i++)
+        {
+            for (int j = 0; j < half; j++)
+            {
+                int val = oddSquare[i][j];
+                result[i][j] = val;                           // A
+                result[i][j + half] = val + 2 * half * half;  // B
+                result[i + half][j] = val + 3 * half * half;  // D
+                result[i + half][j + half] = val + half * half; // C
+            }
+        }
+
+        // Apply LUX transformations
+        int k = (n - 2) / 4;
+        for (int i = 0; i < half; i++)
+        {
+            for (int j = 0; j < k; j++)
+            {
+                if (i != k)
+                {
+                    // Swap A and D
+                    (result[i][j], result[i + half][j]) = (result[i + half][j], result[i][j]);
+                }
+            }
+        }
+
+        return AdaptMagicSquareToConstraints(result, matrix);
+    }
+
+    private int[][] ConstructOddMagicSquareOfSize(int size)
+    {
+        var result = new int[size][];
+        for (int i = 0; i < size; i++)
+            result[i] = new int[size];
+
+        int row = 0;
+        int col = size / 2;
+
+        for (int num = 1; num <= size * size; num++)
+        {
+            result[row][col] = num;
+
+            int newRow = (row - 1 + size) % size;
+            int newCol = (col + 1) % size;
+
+            if (result[newRow][newCol] != 0)
+            {
+                row = (row + 1) % size;
+            }
+            else
+            {
+                row = newRow;
+                col = newCol;
+            }
+        }
+
+        return result;
+    }
+
+    private int[][] AdaptMagicSquareToConstraints(int[][] magicSquare, int[][] constraints)
+    {
+        // Try to adapt the constructed magic square to match constraints
+        var constraintPositions = new List<(int r, int c, int val)>();
+        
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (constraints[i][j] != 0)
+                {
+                    constraintPositions.Add((i, j, constraints[i][j]));
+                }
+            }
+        }
+
+        // If no constraints, return the constructed square
+        if (constraintPositions.Count == 0)
+            return magicSquare;
+
+        // Try to find a permutation that satisfies constraints
+        return FindPermutationForConstraints(magicSquare, constraintPositions);
+    }
+
+    private int[][] FindPermutationForConstraints(int[][] magicSquare, List<(int r, int c, int val)> constraints)
+    {
+        // Create a mapping from values to positions in the magic square
+        var valueToPositions = new Dictionary<int, List<(int r, int c)>>();
+        
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                int val = magicSquare[i][j];
+                if (!valueToPositions.ContainsKey(val))
+                    valueToPositions[val] = new List<(int, int)>();
+                valueToPositions[val].Add((i, j));
+            }
+        }
+
+        // Try to find valid swaps
+        var result = CloneMatrix(magicSquare);
+        
+        foreach (var (r, c, val) in constraints)
+        {
+            if (result[r][c] != val)
+            {
+                // Find where this value currently is
+                if (valueToPositions.ContainsKey(val))
+                {
+                    var positions = valueToPositions[val];
+                    foreach (var (vr, vc) in positions)
+                    {
+                        // Try swapping
+                        int currentVal = result[r][c];
+                        result[r][c] = val;
+                        result[vr][vc] = currentVal;
+                        
+                        if (IsValidMagicSquare(result))
+                        {
+                            // Update mapping
+                            valueToPositions[val] = new List<(int, int)> { (r, c) };
+                            if (!valueToPositions.ContainsKey(currentVal))
+                                valueToPositions[currentVal] = new List<(int, int)>();
+                            valueToPositions[currentVal].Add((vr, vc));
+                            break;
+                        }
+                        else
+                        {
+                            // Revert swap
+                            result[r][c] = currentVal;
+                            result[vr][vc] = val;
+                        }
+                    }
+                }
+            }
+        }
+
+        return IsValidMagicSquare(result) ? result : null;
+    }
+
+    private int[][] TryConstrainedConstruction(int[][] constraints)
+    {
+        // For heavily constrained cases, use a more targeted approach
+        var result = CloneMatrix(constraints);
+        var available = GetAvailableNumbers();
+        var empties = new List<(int r, int c)>();
+        
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (result[i][j] == 0)
+                    empties.Add((i, j));
+            }
+        }
+
+        // Sort by constraint level (positions with more constraints first)
+        empties.Sort((a, b) => GetConstraintLevel(a.r, a.c).CompareTo(GetConstraintLevel(b.r, b.c)));
+        
+        return TryFillConstrainedPositions(result, empties, available, 0);
+    }
+
+    private int[][] TryFillConstrainedPositions(int[][] current, List<(int r, int c)> empties, List<int> available, int index)
+    {
+        if (index == empties.Count)
+        {
+            return IsValidMagicSquare(current) ? current : null;
+        }
+
+        var (r, c) = empties[index];
+        var candidates = GetValidCandidates(current, r, c, available);
+        
+        foreach (int val in candidates.Take(Math.Min(5, candidates.Count))) // Limit candidates
+        {
+            current[r][c] = val;
+            var newAvailable = available.Where(x => x != val).ToList();
+            
+            var result = TryFillConstrainedPositions(current, empties, newAvailable, index + 1);
+            if (result != null)
+                return result;
+                
+            current[r][c] = 0;
+        }
+
+        return null;
+    }
+
+    private List<int> GetValidCandidates(int[][] current, int row, int col, List<int> available)
+    {
+        var candidates = new List<int>();
+        
+        foreach (int val in available)
+        {
+            current[row][col] = val;
+            if (IsCurrentlyValidOnAllDirections(current, row, col))
+            {
+                candidates.Add(val);
+            }
+            current[row][col] = 0;
+        }
+        
+        return candidates;
+    }
+
+    private int GetConstraintLevel(int row, int col)
+    {
+        int level = 1; // Base level for row and column
+        
+        if (row == col) level++; // Main diagonal
+        if (row + col == n - 1) level++; // Anti-diagonal
+        
+        return level;
+    }
+
+    private int[][] TryAssignFreeVariablesOptimized(LiSys liSys, List<string> freeVars, List<int> available)
+    {
+        // For smaller cases with few free variables
+        if (freeVars.Count > 10) return null; // Too many free variables
+        
+        return TryAssignFreeVariables(liSys, freeVars, available, 0);
     }
 
     private int[][] TryAssignFreeVariables(LiSys liSys, List<string> freeVars, List<int> available, int index)
@@ -176,9 +522,8 @@ public class T17istoyanov : IT17
         
         string variable = freeVars[index];
         
-        foreach (int value in available)
+        foreach (int value in available.Take(Math.Min(8, available.Count))) // Limit search
         {
-            // Try assigning this value to the free variable
             var tempSys = liSys.Clone();
             var assignEq = new Eq();
             assignEq.Term(1, variable).Term(-value, null);
@@ -195,6 +540,9 @@ public class T17istoyanov : IT17
         }
         
         return null;
+    }
+
+    private bool IsCurrentlyValidOnAllDirections(int[][] current, int row, int col)
     }
 
     private List<int> GetAvailableNumbers()
