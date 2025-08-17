@@ -9,8 +9,8 @@
 html {
   @include mat.theme((
     color: (
-      primary: mat.$green-palette,
-      tertiary: mat.$red-palette,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
     ),
     typography: Roboto,
     density: 0,
@@ -33,7 +33,6 @@ body {
   // Reset the user agent margin.
   margin: 0;
 }
-
 @import "tailwindcss";
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
