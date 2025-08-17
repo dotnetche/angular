@@ -17,7 +17,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import {MatBadgeModule} from '@angular/material/badge';
 import { ReservationsService } from '../../services/reservations.service';
 import { 
   ReservationDTO, 
@@ -55,12 +55,41 @@ import {
     MatNativeDateModule,
     MatExpansionModule,
     MatTabsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatBadgeModule
   ],
   templateUrl: './reservations.component.html',
   styleUrl: './reservations.component.scss'
 })
 export class ReservationsComponent implements OnInit {
+
+
+
+
+  filteredData: any[] = [];
+
+
+
+  applySearch(): void {
+    const term = (this.searchForm.get('searchTerm')?.value || '').toLowerCase();
+    if (!term) {
+      this.filteredData = [...this.dataSource.data];
+    } else {
+      this.filteredData = this.dataSource.data.filter((row: any) => {
+        return Object.values(row).some(val =>
+          val && val.toString().toLowerCase().includes(term)
+        );
+      });
+    }
+  }
+
+  showAllAndRevealHidden() {
+    this.filteredData.forEach((row: any) => row.isHidden = false);
+    this.applySearch();
+  }
+  getHiddenCount(): number {
+    return this.dataSource.data.filter((row: any) => row.isHidden).length;
+  }
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   displayedColumns: string[] = ['select', 'hotelName', 'clientName', 'operatorName', 'dateFrom', 'dateTo', 'totalPrice', 'reservationStatusName', 'actions'];
@@ -119,13 +148,10 @@ export class ReservationsComponent implements OnInit {
   ngOnInit(): void {
     this.loadReservations();
     this.loadDropdownData();
-    
     // Setup search functionality
     this.searchForm.get('searchTerm')?.valueChanges.subscribe(() => {
-      this.currentPage = 0;
-      this.loadReservations();
+      this.applySearch();
     });
-
     // Watch hotel changes to load rooms
     this.reservationForm.get('hotelId')?.valueChanges.subscribe(hotelId => {
       if (hotelId) {
@@ -136,21 +162,20 @@ export class ReservationsComponent implements OnInit {
 
   loadReservations(): void {
     this.isLoading = true;
-    
     const request: BaseGridRequestModel = {
       page: this.currentPage + 1,
       pageSize: this.pageSize,
-      searchTerm: this.searchForm.get('searchTerm')?.value || ''
+      searchTerm: ''
     };
-
     this.reservationsService.getAll(request).subscribe({
       next: (response) => {
         this.dataSource.data = response.data || response.records || [];
+        this.filteredData = [...this.dataSource.data];
         this.totalCount = response.totalCount || response.totalRecordsCount || 0;
         this.isLoading = false;
-        
         // Clear selection when data changes
         this.selection.clear();
+        this.applySearch();
       },
       error: (error) => {
         console.error('Error loading reservations:', error);
@@ -237,6 +262,7 @@ export class ReservationsComponent implements OnInit {
   }
 
   showAddReservationForm(): void {
+    this.loadDropdownData(); // Always reload dropdowns (hotels, etc.)
     this.showAddForm = true;
     this.isEditing = false;
     this.reservationForm.reset();
