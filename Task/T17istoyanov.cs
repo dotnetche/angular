@@ -543,6 +543,50 @@ public class T17istoyanov : IT17
     }
 
     private bool IsCurrentlyValidOnAllDirections(int[][] current, int row, int col)
+    {
+        if (current[row].All(x => x != 0) && current[row].Sum() != targetSum)
+            return false;
+
+        int colSum = 0;
+        bool colFull = true;
+        for (int i = 0; i < n; i++)
+        {
+            if (current[i][col] == 0) colFull = false;
+            colSum += current[i][col];
+        }
+
+        if (colFull && colSum != targetSum)
+            return false;
+
+        if (row == col)
+        {
+            int d1 = 0;
+            bool full1 = true;
+            for (int i = 0; i < n; i++)
+            {
+                if (current[i][i] == 0) full1 = false;
+                d1 += current[i][i];
+            }
+
+            if (full1 && d1 != targetSum)
+                return false;
+        }
+
+        if (row + col == n - 1)
+        {
+            int d2 = 0;
+            bool full2 = true;
+            for (int i = 0; i < n; i++)
+            {
+                if (current[i][n - 1 - i] == 0) full2 = false;
+                d2 += current[i][n - 1 - i];
+            }
+
+            if (full2 && d2 != targetSum)
+                return false;
+        }
+
+        return true;
     }
 
     private List<int> GetAvailableNumbers()
