@@ -1,0 +1,292 @@
+<div class="flex flex-col gap-6 p-6 w-full">
+    <!-- Header with buttons -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold">{{ 'reservations.process-reservation' | tlTranslate }}</h1>
+        <div class="flex gap-2">
+            <button mat-raised-button color="primary" (click)="cancel()">
+                {{ 'common.cancel' | tlTranslate }}
+            </button>
+            <button mat-raised-button color="accent" (click)="save()" [disabled]="!form.valid">
+                {{ 'common.save' | tlTranslate }}
+            </button>
+        </div>
+    </div>
+
+    <form [formGroup]="form">
+        <!-- Основна информация -->
+        <mat-card class="mb-6">
+            <mat-card-title>
+                {{ 'reservations.basic-information' | tlTranslate }}
+            </mat-card-title>
+            <mat-card-content class="flex flex-col gap-4 pt-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <mat-form-field>
+                        <mat-label>{{ 'reservations.hotel' | tlTranslate }}</mat-label>
+                        <input matInput formControlName="hotelControl" [matAutocomplete]="hotelAutocomplete" [required]="true">
+                        <mat-error *ngIf="form.get('hotelControl').hasError('required')">
+                            {{ 'common.field-is-required' | tlTranslate }}
+                        </mat-error>
+                        <mat-error *ngIf="form.get('hotelControl').hasError('selectedvaluefromdropdown')">
+                            {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                        </mat-error>
+                        <mat-autocomplete #hotelAutocomplete [autoActiveFirstOption]="true"
+                            [displayWith]="autocompleteDisplayFunction">
+                            <ng-container *ngFor="let option of filteredHotels">
+                                <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                    <span class="multiline-option">
+                                        {{ option.displayName ? option.displayName : option }}
+                                    </span>
+                                </mat-option>
+                            </ng-container>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>{{ 'reservations.client' | tlTranslate }}</mat-label>
+                        <input matInput formControlName="clientControl" [matAutocomplete]="clientAutocomplete" [required]="true">
+                        <mat-error *ngIf="form.get('clientControl').hasError('required')">
+                            {{ 'common.field-is-required' | tlTranslate }}
+                        </mat-error>
+                        <mat-error *ngIf="form.get('clientControl').hasError('selectedvaluefromdropdown')">
+                            {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                        </mat-error>
+                        <mat-autocomplete #clientAutocomplete [autoActiveFirstOption]="true"
+                            [displayWith]="autocompleteDisplayFunction">
+                            <ng-container *ngFor="let option of filteredClients">
+                                <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                    <span class="multiline-option">
+                                        {{ option.displayName ? option.displayName : option }}
+                                    </span>
+                                </mat-option>
+                            </ng-container>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>{{ 'reservations.operator' | tlTranslate }}</mat-label>
+                        <input matInput formControlName="operatorControl" [matAutocomplete]="operatorAutocomplete" [required]="true">
+                        <mat-error *ngIf="form.get('operatorControl').hasError('required')">
+                            {{ 'common.field-is-required' | tlTranslate }}
+                        </mat-error>
+                        <mat-error *ngIf="form.get('operatorControl').hasError('selectedvaluefromdropdown')">
+                            {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                        </mat-error>
+                        <mat-autocomplete #operatorAutocomplete [autoActiveFirstOption]="true"
+                            [displayWith]="autocompleteDisplayFunction">
+                            <ng-container *ngFor="let option of filteredOperators">
+                                <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                    <span class="multiline-option">
+                                        {{ option.displayName ? option.displayName : option }}
+                                    </span>
+                                </mat-option>
+                            </ng-container>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>{{ 'reservations.status' | tlTranslate }}</mat-label>
+                        <input matInput formControlName="statusControl" [matAutocomplete]="statusAutocomplete" [required]="true">
+                        <mat-error *ngIf="form.get('statusControl').hasError('required')">
+                            {{ 'common.field-is-required' | tlTranslate }}
+                        </mat-error>
+                        <mat-error *ngIf="form.get('statusControl').hasError('selectedvaluefromdropdown')">
+                            {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                        </mat-error>
+                        <mat-autocomplete #statusAutocomplete [autoActiveFirstOption]="true"
+                            [displayWith]="autocompleteDisplayFunction">
+                            <ng-container *ngFor="let option of filteredStatuses">
+                                <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                    <span class="multiline-option">
+                                        {{ option.displayName ? option.displayName : option }}
+                                    </span>
+                                </mat-option>
+                            </ng-container>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <mat-form-field>
+                        <mat-label>{{ 'reservations.date-from' | tlTranslate }}</mat-label>
+                        <input matInput [matDatepicker]="dateFromPicker" formControlName="dateFromControl" [required]="true">
+                        <mat-datepicker-toggle matSuffix [for]="dateFromPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #dateFromPicker></mat-datepicker>
+                        <mat-error *ngIf="form.get('dateFromControl').hasError('required')">
+                            {{ 'common.field-is-required' | tlTranslate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>{{ 'reservations.date-to' | tlTranslate }}</mat-label>
+                        <input matInput [matDatepicker]="dateToPicker" formControlName="dateToControl" [required]="true">
+                        <mat-datepicker-toggle matSuffix [for]="dateToPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #dateToPicker></mat-datepicker>
+                        <mat-error *ngIf="form.get('dateToControl').hasError('required')">
+                            {{ 'common.field-is-required' | tlTranslate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>{{ 'reservations.total-price' | tlTranslate }}</mat-label>
+                        <input matInput formControlName="totalPriceControl" type="number" [required]="true" />
+                        <mat-error *ngIf="form.get('totalPriceControl')!.hasError('required')">
+                            {{ 'common.field-is-required' | tlTranslate }}
+                        </mat-error>
+                        <mat-error *ngIf="form.get('totalPriceControl')!.hasError('min')">
+                            {{ 'common.field-has-min-value' | tlTranslate }}: {{ form.get('totalPriceControl')!.errors.min }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="w-full">
+                    <mat-form-field class="w-full">
+                        <mat-label>{{ 'reservations.customer-notes' | tlTranslate }}</mat-label>
+                        <textarea matInput
+                                  formControlName="customerNotesControl"
+                                  [cdkTextareaAutosize]="true"
+                                  [cdkAutosizeMinRows]="3"
+                                  [cdkAutosizeMaxRows]="5"
+                                  [required]="false">
+                        </textarea>
+                        <mat-error *ngIf="form.get('customerNotesControl')!.hasError('maxlength')">
+                            {{ 'common.filed-has-max-length' | tlTranslate }}: {{
+                            form.get('customerNotesControl')!.errors.maxlength.requiredLength }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Настаняване -->
+        <mat-card class="mb-6">
+            <mat-card-title class="flex justify-between items-center">
+                <span>{{ 'reservations.accommodation' | tlTranslate }}</span>
+                <button mat-raised-button color="accent" (click)="addRoom()" type="button">
+                    <mat-icon>add</mat-icon>
+                    {{ 'reservations.add-room' | tlTranslate }}
+                </button>
+            </mat-card-title>
+            <mat-card-content class="pt-4">
+                <div class="overflow-x-auto">
+                    <table mat-table [dataSource]="roomsDataSource" class="w-full">
+                        <ng-container matColumnDef="adults">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.adults' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let room">{{ room.adults }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="children">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.children' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let room">{{ room.children }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="babies">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.babies' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let room">{{ room.babies }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="hotelRoomName">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.room' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let room">{{ room.hotelRoomName }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="feedingTypeName">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.feeding' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let room">{{ room.feedingTypeName }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="price">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.price' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let room">{{ room.price }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                            <th mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let room; let i = index">
+                                <div class="flex gap-2">
+                                    <button mat-icon-button (click)="editRoom(i)" matTooltip="{{ 'common.edit' | tlTranslate }}">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="deleteRoom(i)" matTooltip="{{ 'common.delete' | tlTranslate }}">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="roomDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: roomDisplayedColumns;"></tr>
+                    </table>
+
+                    <div *ngIf="model.reservationRooms?.length === 0" class="text-center py-8 text-gray-500">
+                        {{ 'reservations.no-rooms' | tlTranslate }}
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Плащания -->
+        <mat-card>
+            <mat-card-title class="flex justify-between items-center">
+                <span>{{ 'reservations.payments' | tlTranslate }}</span>
+                <button mat-raised-button color="accent" (click)="addPayment()" type="button">
+                    <mat-icon>add</mat-icon>
+                    {{ 'reservations.add-payment' | tlTranslate }}
+                </button>
+            </mat-card-title>
+            <mat-card-content class="pt-4">
+                <div class="overflow-x-auto">
+                    <table mat-table [dataSource]="paymentsDataSource" class="w-full">
+                        <ng-container matColumnDef="dueDate">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.due-date' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let payment">{{ payment.dueDate | date:'dd.MM.yyyy' }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="paymentTypeName">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.payment-type' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let payment">{{ payment.paymentTypeName }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="paymentChannelName">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.payment-channel' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let payment">{{ payment.paymentChannelName }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="amount">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.amount' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let payment">{{ payment.amount }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="isPaid">
+                            <th mat-header-cell *matHeaderCellDef>{{ 'reservations.is-paid' | tlTranslate }}</th>
+                            <td mat-cell *matCellDef="let payment">
+                                <mat-icon *ngIf="payment.isPaid" class="text-green-600">check_circle</mat-icon>
+                                <mat-icon *ngIf="!payment.isPaid" class="text-red-600">cancel</mat-icon>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                            <th mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let payment; let i = index">
+                                <div class="flex gap-2">
+                                    <button mat-icon-button (click)="editPayment(i)" matTooltip="{{ 'common.edit' | tlTranslate }}">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="deletePayment(i)" matTooltip="{{ 'common.delete' | tlTranslate }}">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="paymentDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: paymentDisplayedColumns;"></tr>
+                    </table>
+
+                    <div *ngIf="model.reservationPayments?.length === 0" class="text-center py-8 text-gray-500">
+                        {{ 'reservations.no-payments' | tlTranslate }}
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </form>
+</div>

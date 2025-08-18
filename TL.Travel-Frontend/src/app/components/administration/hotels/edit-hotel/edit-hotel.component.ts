@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UrlHandlingStrategy } from '@angular/router';
@@ -19,6 +20,15 @@ import { lastValueFrom, startWith, map } from 'rxjs';
 })
 export class EditHotelComponent implements IDialogComponent, OnInit {
     public viewMode: boolean = true;
+    public hoverStar: number = 0;
+
+    setHoverStar(star: number): void {
+        this.hoverStar = star;
+    }
+
+    selectStar(star: number): void {
+        this.form.get('starsControl')?.setValue(star);
+    }
     public id?: number;
     public form!: FormGroup;
 

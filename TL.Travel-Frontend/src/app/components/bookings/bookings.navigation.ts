@@ -1,10 +1,12 @@
 import { ITLNavigation } from 'app/core/navigation/tl-navigation.interface';
+import { ReservationsComponent } from './reservations/reservations.component';
+import { ProcessReservationComponent } from './process-reservation/process-reservation.component';
 
 export const BookingRoutes: ITLNavigation[] = [
     {
         id: 'reservations',
         url: '',
-        //component: /* add reservations component */,
+        component: ReservationsComponent,
         hideInMenu: true
     },
     {
@@ -15,7 +17,7 @@ export const BookingRoutes: ITLNavigation[] = [
             {
                 id: 'reservations',
                 url: '/reservations',
-                //component: /* add reservations component */,
+                component: ReservationsComponent,
                 translate: 'navigation.reservations',
                 type: 'basic',
                 icon: 'library_books'
@@ -23,7 +25,7 @@ export const BookingRoutes: ITLNavigation[] = [
             {
                 id: 'process-reservation',
                 url: '/process-reservation',
-                //component: /* add process reservation component */,
+                component: ProcessReservationComponent,
                 translate: 'navigation.process-reservation',
                 type: 'basic',
                 icon: 'library_add'

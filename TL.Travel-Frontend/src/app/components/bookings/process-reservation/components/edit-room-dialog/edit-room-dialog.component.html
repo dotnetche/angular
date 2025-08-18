@@ -1,0 +1,94 @@
+<div class="dialog-padding" [formGroup]="form">
+    <mat-card class="flex h-full w-full">
+        <mat-card-title>
+            {{ 'reservations.room-information' | tlTranslate }}
+        </mat-card-title>
+        <mat-card-content class="flex flex-col gap-4">
+            <div class="w-full flex flex-row justify-between items-center gap-4">
+                <mat-form-field class="flex-1 md:w-1/3">
+                    <mat-label>{{ 'reservations.adults' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="adultsControl" type="number" [required]="true" />
+                    <mat-error *ngIf="form.get('adultsControl')!.hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('adultsControl')!.hasError('min')">
+                        {{ 'common.field-has-min-value' | tlTranslate }}: {{ form.get('adultsControl')!.errors.min }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-1/3">
+                    <mat-label>{{ 'reservations.children' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="childrenControl" type="number" [required]="false" />
+                    <mat-error *ngIf="form.get('childrenControl')!.hasError('min')">
+                        {{ 'common.field-has-min-value' | tlTranslate }}: {{ form.get('childrenControl')!.errors.min }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-1/3">
+                    <mat-label>{{ 'reservations.babies' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="babiesControl" type="number" [required]="false" />
+                    <mat-error *ngIf="form.get('babiesControl')!.hasError('min')">
+                        {{ 'common.field-has-min-value' | tlTranslate }}: {{ form.get('babiesControl')!.errors.min }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="w-full flex flex-row justify-between items-center gap-4">
+                <mat-form-field class="flex-1 md:w-1/2">
+                    <mat-label>{{ 'reservations.room' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="hotelRoomControl" [matAutocomplete]="hotelRoomAutocomplete" [required]="true">
+                    <mat-error *ngIf="form.get('hotelRoomControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('hotelRoomControl').hasError('selectedvaluefromdropdown')">
+                        {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                    </mat-error>
+                    <mat-autocomplete #hotelRoomAutocomplete [autoActiveFirstOption]="true"
+                        [displayWith]="autocompleteDisplayFunction">
+                        <ng-container *ngFor="let option of filteredHotelRooms">
+                            <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                <span class="multiline-option">
+                                    {{ option.displayName ? option.displayName : option }}
+                                </span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-1/2">
+                    <mat-label>{{ 'reservations.feeding' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="feedingTypeControl" [matAutocomplete]="feedingTypeAutocomplete" [required]="true">
+                    <mat-error *ngIf="form.get('feedingTypeControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('feedingTypeControl').hasError('selectedvaluefromdropdown')">
+                        {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                    </mat-error>
+                    <mat-autocomplete #feedingTypeAutocomplete [autoActiveFirstOption]="true"
+                        [displayWith]="autocompleteDisplayFunction">
+                        <ng-container *ngFor="let option of filteredFeedingTypes">
+                            <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                <span class="multiline-option">
+                                    {{ option.displayName ? option.displayName : option }}
+                                </span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+
+            <div class="w-full">
+                <mat-form-field class="w-full">
+                    <mat-label>{{ 'reservations.price' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="priceControl" type="number" [required]="true" />
+                    <mat-error *ngIf="form.get('priceControl')!.hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('priceControl')!.hasError('min')">
+                        {{ 'common.field-has-min-value' | tlTranslate }}: {{ form.get('priceControl')!.errors.min }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,148 @@
+<div class="dialog-padding" [formGroup]="form">
+    <mat-card class="flex h-full w-full">
+        <mat-card-title>
+            {{ 'reservations.basic-information' | tlTranslate }}
+        </mat-card-title>
+        <mat-card-content class="flex flex-col gap-4">
+            <div class="w-full flex flex-row justify-between items-center gap-4">
+                <mat-form-field class="flex-1 md:w-1/3">
+                    <mat-label>{{ 'reservations.client' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="clientControl" [matAutocomplete]="clientAutocomplete"
+                        [required]="true">
+                    <mat-error *ngIf="form.get('clientControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('clientControl').hasError('selectedvaluefromdropdown')">
+                        {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                    </mat-error>
+                    <mat-autocomplete #clientAutocomplete [autoActiveFirstOption]="true"
+                        [displayWith]="autocompleteDisplayFunction">
+                        <ng-container *ngFor="let option of filteredClients">
+                            <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                <span class="multiline-option">
+                                    {{ option.displayName ? option.displayName : option }}
+                                </span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-1/3">
+                    <mat-label>{{ 'reservations.hotel' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="hotelControl" [matAutocomplete]="hotelAutocomplete"
+                        [required]="true">
+                    <mat-error *ngIf="form.get('hotelControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('hotelControl').hasError('selectedvaluefromdropdown')">
+                        {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                    </mat-error>
+                    <mat-autocomplete #hotelAutocomplete [autoActiveFirstOption]="true"
+                        [displayWith]="autocompleteDisplayFunction">
+                        <ng-container *ngFor="let option of filteredHotels">
+                            <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                <span class="multiline-option">
+                                    {{ option.displayName ? option.displayName : option }}
+                                </span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-1/3">
+                    <mat-label>{{ 'reservations.operator' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="operatorControl" [matAutocomplete]="operatorAutocomplete"
+                        [required]="true">
+                    <mat-error *ngIf="form.get('operatorControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('operatorControl').hasError('selectedvaluefromdropdown')">
+                        {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                    </mat-error>
+                    <mat-autocomplete #operatorAutocomplete [autoActiveFirstOption]="true"
+                        [displayWith]="autocompleteDisplayFunction">
+                        <ng-container *ngFor="let option of filteredOperators">
+                            <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                <span class="multiline-option">
+                                    {{ option.displayName ? option.displayName : option }}
+                                </span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+
+            <div class="w-full flex flex-row justify-between items-center gap-4">
+                <mat-form-field class="flex-1 md:w-1/4">
+                    <mat-label>{{ 'reservations.date-from' | tlTranslate }}</mat-label>
+                    <input matInput [matDatepicker]="dateFromPicker" formControlName="dateFromControl" [required]="true">
+                    <mat-datepicker-toggle matSuffix [for]="dateFromPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dateFromPicker></mat-datepicker>
+                    <mat-error *ngIf="form.get('dateFromControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-1/4">
+                    <mat-label>{{ 'reservations.date-to' | tlTranslate }}</mat-label>
+                    <input matInput [matDatepicker]="dateToPicker" formControlName="dateToControl" [required]="true">
+                    <mat-datepicker-toggle matSuffix [for]="dateToPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dateToPicker></mat-datepicker>
+                    <mat-error *ngIf="form.get('dateToControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-1/4">
+                    <mat-label>{{ 'reservations.status' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="statusControl" [matAutocomplete]="statusAutocomplete"
+                        [required]="true">
+                    <mat-error *ngIf="form.get('statusControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('statusControl').hasError('selectedvaluefromdropdown')">
+                        {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                    </mat-error>
+                    <mat-autocomplete #statusAutocomplete [autoActiveFirstOption]="true"
+                        [displayWith]="autocompleteDisplayFunction">
+                        <ng-container *ngFor="let option of filteredStatuses">
+                            <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                <span class="multiline-option">
+                                    {{ option.displayName ? option.displayName : option }}
+                                </span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-1/4">
+                    <mat-label>{{ 'reservations.total-price' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="totalPriceControl" type="number" [required]="true" />
+                    <mat-error *ngIf="form.get('totalPriceControl')!.hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('totalPriceControl')!.hasError('min')">
+                        {{ 'common.field-has-min-value' | tlTranslate }}: {{ form.get('totalPriceControl')!.errors.min }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="w-full flex flex-row justify-between items-center gap-4">
+                <mat-form-field class="flex-grow">
+                    <mat-label>{{ 'reservations.customer-notes' | tlTranslate }}</mat-label>
+                    <textarea matInput
+                              formControlName="customerNotesControl"
+                              [cdkTextareaAutosize]="true"
+                              [cdkAutosizeMinRows]="3"
+                              [cdkAutosizeMaxRows]="5"
+                              [required]="false">
+                    </textarea>
+                    <mat-error *ngIf="form.get('customerNotesControl')!.hasError('maxlength')">
+                        {{ 'common.filed-has-max-length' | tlTranslate }}: {{
+                        form.get('customerNotesControl')!.errors.maxlength.requiredLength }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

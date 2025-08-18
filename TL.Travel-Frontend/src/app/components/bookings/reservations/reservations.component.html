@@ -1,0 +1,66 @@
+<mat-card class="flex h-full w-full">
+    <mat-card-content>
+        <tl-data-table [isRemote]="true"
+                       [isSoftDeletable]="false"
+                       [showInactiveRecords]="false"
+                       [recordsPerPage]="recordsPerPage"
+                       (addButtonClicked)="addReservation()">
+            <data-column [flexRate]="0.15"
+                         propertyName="clientName"
+                         columnName="{{ 'reservations.client' | tlTranslate}}">
+            </data-column>
+            <data-column [flexRate]="0.15"
+                         propertyName="hotelName"
+                         columnName="{{ 'reservations.hotel' | tlTranslate}}">
+            </data-column>
+            <data-column [flexRate]="0.1"
+                         propertyName="dateFrom"
+                         columnName="{{ 'reservations.date-from' | tlTranslate}}">
+            </data-column>
+            <data-column [flexRate]="0.1"
+                         propertyName="dateTo"
+                         columnName="{{ 'reservations.date-to' | tlTranslate}}">
+            </data-column>
+            <data-column [flexRate]="0.1"
+                         propertyName="reservationStatusName"
+                         columnName="{{ 'reservations.status' | tlTranslate}}">
+            </data-column>
+            <data-column [flexRate]="0.1"
+                         propertyName="totalPrice"
+                         columnName="{{ 'reservations.total-price' | tlTranslate}}">
+            </data-column>
+            <data-template-column [flexRate]="0.1"
+                                  [isSortable]="false">
+                <ng-template ngx-datatable-cell-template
+                             let-row="row">
+                    <div class="flex flex-row flex-wrap justify-end items-center">
+                        <button mat-icon-button
+                                matTooltip="{{ 'reservations.view-reservation' | tlTranslate }}"
+                                matTooltipPosition="above"
+                                matTooltipShowDelay="250"
+                                class="cursor-pointer"
+                                (click)="viewReservation(row.id)">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button mat-icon-button
+                                matTooltip="{{ 'reservations.edit-reservation' | tlTranslate }}"
+                                matTooltipPosition="above"
+                                matTooltipShowDelay="250"
+                                class="cursor-pointer"
+                                (click)="editReservation(row.id)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button
+                                matTooltip="{{ 'reservations.delete-reservation' | tlTranslate }}"
+                                matTooltipPosition="above"
+                                matTooltipShowDelay="250"
+                                class="cursor-pointer"
+                                (click)="deleteReservation(row.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </ng-template>
+            </data-template-column>
+        </tl-data-table>
+    </mat-card-content>
+</mat-card>

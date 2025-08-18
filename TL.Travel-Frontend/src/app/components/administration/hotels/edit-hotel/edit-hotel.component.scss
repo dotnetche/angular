@@ -1,0 +1,15 @@
+// Star rating styles
+.star-rating mat-icon {
+	font-size: 2rem;
+	color: #cbd5e1; // gray-300
+	transition: color 0.2s;
+}
+.star-rating mat-icon.star-selected {
+	color: #2563eb; // blue-600
+}
+.star-rating mat-icon.star-unselected {
+	color: #cbd5e1; // gray-300
+}
+.star-rating.readonly mat-icon {
+	cursor: default;
+}

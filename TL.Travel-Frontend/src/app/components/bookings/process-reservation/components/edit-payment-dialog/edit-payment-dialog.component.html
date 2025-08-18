@@ -1,0 +1,81 @@
+<div class="dialog-padding" [formGroup]="form">
+    <mat-card class="flex h-full w-full">
+        <mat-card-title>
+            {{ 'reservations.payment-information' | tlTranslate }}
+        </mat-card-title>
+        <mat-card-content class="flex flex-col gap-4 w-full">
+            <div class="w-full flex flex-row justify-between items-center gap-4">
+                <mat-form-field class="flex-1 md:w-full">
+                    <mat-label>{{ 'reservations.due-date' | tlTranslate }}</mat-label>
+                    <input matInput [matDatepicker]="dueDatePicker" formControlName="dueDateControl" [required]="true">
+                    <mat-datepicker-toggle matSuffix [for]="dueDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dueDatePicker></mat-datepicker>
+                    <mat-error *ngIf="form.get('dueDateControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-full">
+                    <mat-label>{{ 'reservations.amount' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="amountControl" type="number" [required]="true" />
+                    <mat-error *ngIf="form.get('amountControl')!.hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('amountControl')!.hasError('min')">
+                        {{ 'common.field-has-min-value' | tlTranslate }}: {{ form.get('amountControl')!.errors.min }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="w-full flex flex-row justify-between items-center gap-4">
+                <mat-form-field class="flex-1 md:w-full">
+                    <mat-label>{{ 'reservations.payment-type' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="paymentTypeControl" [matAutocomplete]="paymentTypeAutocomplete" [required]="true">
+                    <mat-error *ngIf="form.get('paymentTypeControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('paymentTypeControl').hasError('selectedvaluefromdropdown')">
+                        {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                    </mat-error>
+                    <mat-autocomplete #paymentTypeAutocomplete [autoActiveFirstOption]="true"
+                        [displayWith]="autocompleteDisplayFunction">
+                        <ng-container *ngFor="let option of filteredPaymentTypes">
+                            <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                <span class="multiline-option">
+                                    {{ option.displayName ? option.displayName : option }}
+                                </span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field class="flex-1 md:w-full">
+                    <mat-label>{{ 'reservations.payment-channel' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="paymentChannelControl" [matAutocomplete]="paymentChannelAutocomplete" [required]="true">
+                    <mat-error *ngIf="form.get('paymentChannelControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('paymentChannelControl').hasError('selectedvaluefromdropdown')">
+                        {{ 'common.value-from-dropdown-must-be-selected' | tlTranslate }}
+                    </mat-error>
+                    <mat-autocomplete #paymentChannelAutocomplete [autoActiveFirstOption]="true"
+                        [displayWith]="autocompleteDisplayFunction">
+                        <ng-container *ngFor="let option of filteredPaymentChannels">
+                            <mat-option *ngIf="option.displayName ? option.isActive : true" [value]="option">
+                                <span class="multiline-option">
+                                    {{ option.displayName ? option.displayName : option }}
+                                </span>
+                            </mat-option>
+                        </ng-container>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+
+            <div class="w-full">
+                <mat-slide-toggle formControlName="isPaidControl" color="accent">
+                    {{ 'reservations.is-paid' | tlTranslate }}
+                </mat-slide-toggle>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
