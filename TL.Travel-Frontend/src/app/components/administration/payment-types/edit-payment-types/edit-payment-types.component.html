@@ -1,0 +1,22 @@
+<div class="dialog-padding" [formGroup]="form">
+    <mat-card class="flex h-full w-full">
+        <mat-card-title>
+            {{ 'payment-types.basic-information' | tlTranslate }}
+        </mat-card-title>
+        <mat-card-content class="flex flex-col gap-4">
+            <div class="w-full flex flex-row justify-between items-center gap-4">
+                <mat-form-field class="flex-1 md:w-1/3">
+                    <mat-label>{{ 'payment-types.name' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="nameControl" [required]="true">
+                    <mat-error *ngIf="form.get('nameControl').hasError('required')">
+                        {{ 'common.field-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('nameControl').hasError('maxlength')">
+                        {{ 'common.field-has-max-length' | tlTranslate }}: {{
+                        form.get('nameControl').errors.maxlength.requiredLength }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

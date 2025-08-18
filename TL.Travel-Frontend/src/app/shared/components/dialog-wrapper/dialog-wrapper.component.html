@@ -1,0 +1,105 @@
+<div class="flex flex-col wrapper">
+    <div class="content-wrapper">
+        <mat-toolbar color="primary" class="m-0">
+            <mat-toolbar-row class="flex w-full justify-between items-center flex-basis-Auto" [class.draggable]="draggable">
+                <span class="title text-xl font-bold text-white text-center multi-line">{{ title }}</span>
+                <button *ngIf="showHeaderCloseBtn"
+                        mat-icon-button
+                        (click)="headerCloseDialog(headerCancelButton)"
+                        matTooltip="{{ headerCloseButtonTooltip | tlTranslate: 'cap'  }}"
+                        matTooltipPosition="above"
+                        matTooltipHideDelay="700">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-toolbar-row>
+        </mat-toolbar>
+
+        <mat-dialog-content class="p-0 m-0 mat-dialog-content">
+            <template #placeHolder>
+            </template>
+        </mat-dialog-content>
+    </div>
+
+    <mat-dialog-actions *ngIf="cancelBtn !== undefined
+                           || cancelBtn !== null
+                           || (leftSideActionsCollection && leftSideActionsCollection.length !== 0)
+                           || (rightSideActionsCollection && rightSideActionsCollection.length !== 0)
+                           || saveBtn !== undefined
+                           || saveBtn !== null
+                           || closeBtn !== undefined
+                           || closeBtn !== null"
+                        class="m-0 pb-0 w-full flex justify-between">
+        <div class="flex w-1/4 flex-row justify-start items-center gap-4">
+            <button *ngIf="cancelBtn !== undefined && ((viewMode && cancelBtn.isVisibleInViewMode) || !viewMode)"
+                    [id]="cancelBtn.id"
+                    mat-raised-button
+                    [ngClass]="cancelBtn.customClass"
+                    [color]="cancelBtn.color"
+                    (click)="cancelBtnClicked(cancelBtn)">
+                {{ cancelBtn.translateValue | tlTranslate: 'cap' }}
+            </button>
+
+            <div *ngFor="let leftButton of leftSideActionsCollection" class="flex gap-4">
+                <button *ngIf="(viewMode && leftButton.isVisibleInViewMode) || !viewMode"
+                        [id]="leftButton.id"
+                        mat-raised-button
+                        [ngClass]="leftButton.customClass"
+                        [color]="leftButton.color"
+                        (click)="closeDialog(leftButton)"
+                        [disabled]="leftButton.disabled">
+                    <div class="flex flex-row justify-between items-center gap-1">
+                        <mat-icon *ngIf="leftButton.icon !== undefined"
+                                  [class]="leftButton.icon.class"
+                                  [style.font-size.em]="_size || MAT_ICON_SIZE">
+                            <div class="material-icons-outlined">
+                                {{ leftButton.icon.id }}
+                            </div>
+                        </mat-icon>
+                        <span>{{ leftButton.translateValue | tlTranslate: 'cap' }}</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex w-3/4 flex-row justify-end items-center gap-4">
+            <div *ngFor="let rightButton of rightSideActionsCollection">
+                <button *ngIf="(viewMode && rightButton.isVisibleInViewMode) || !viewMode"
+                        [id]="rightButton.id"
+                        mat-raised-button
+                        [color]="rightButton.color"
+                        [ngClass]="rightButton.customClass"
+                        (click)="closeDialog(rightButton)"
+                        [disabled]="rightButton.disabled">
+                    <div class="flex flex-row justify-between items-center gap-1">
+                        <mat-icon *ngIf="rightButton.icon !== undefined"
+                                  [class]="rightButton.icon.class"
+                                  [style.font-size.em]="_size || MAT_ICON_SIZE">
+                            <div class="material-icons-outlined">
+                                {{ rightButton.icon.id }}
+                            </div>
+                        </mat-icon>
+                        <span>{{ rightButton.translateValue | tlTranslate: 'cap' }}</span>
+                    </div>
+                </button>
+            </div>
+
+            <button *ngIf="closeBtn !== undefined && viewMode"
+                    [id]="closeBtn.id"
+                    mat-raised-button
+                    [ngClass]="closeBtn.customClass"
+                    [color]="closeBtn.color"
+                    (click)="closeBtnClicked(closeBtn)">
+                {{ closeBtn.translateValue | tlTranslate: 'cap' }}
+            </button>
+
+            <button *ngIf="saveBtn !== undefined && ((viewMode && saveBtn.isVisibleInViewMode) || !viewMode)"
+                    [id]="saveBtn.id"
+                    mat-raised-button
+                    [ngClass]="saveBtn.customClass"
+                    [color]="saveBtn.color"
+                    (click)="saveBtnClicked(saveBtn)">
+                {{ saveBtn.translateValue | tlTranslate: 'cap' }}
+            </button>
+        </div>
+    </mat-dialog-actions>
+</div>

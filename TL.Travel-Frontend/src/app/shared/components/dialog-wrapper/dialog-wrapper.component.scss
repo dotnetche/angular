@@ -1,0 +1,27 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    align-items: stretch;
+    justify-content: space-between;
+    position: relative;
+    height: 100%;
+    max-height: inherit;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: inherit;
+    border-bottom: 56px solid transparent;
+    margin-bottom: -56px;
+}
+
+.draggable:hover {
+    cursor: grab;
+}
+
+.draggable.grabbed:hover {
+    cursor: grabbing;
+}

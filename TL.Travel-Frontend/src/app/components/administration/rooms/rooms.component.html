@@ -1,0 +1,59 @@
+<mat-card class="flex h-full w-full">
+    <mat-card-content>
+        <tl-data-table [isRemote]="true"
+                       [isSoftDeletable]="false"
+                       [showInactiveRecords]="false"
+                       [recordsPerPage]="recordsPerPage"
+                       (addButtonClicked)="addRoom()">
+            <data-column [flexRate]="0.2"
+                         propertyName="name"
+                         columnName="{{ 'rooms.name' | tlTranslate}}">
+            </data-column>
+            <data-column [flexRate]="0.2"
+                         propertyName="hotelName"
+                         columnName="{{ 'rooms.hotel' | tlTranslate}}">
+            </data-column>
+            <data-column [flexRate]="0.1"
+                         propertyName="price"
+                         columnName="{{ 'rooms.price' | tlTranslate}}">
+            </data-column>
+            <data-column [flexRate]="0.1"
+                         propertyName="description"
+                         columnName="{{ 'rooms.description' | tlTranslate}}">
+            </data-column>
+            <data-template-column [flexRate]="0.1"
+                                  [isSortable]="false">
+                <ng-template ngx-datatable-cell-template
+                             let-row="row">
+                    <div class="flex flex-row flex-wrap justify-end items-center">
+                        <button mat-icon-button
+                                matTooltip="{{ 'rooms.view-room' | tlTranslate }}"
+                                matTooltipPosition="above"
+                                matTooltipShowDelay="250"
+                                class="cursor-pointer"
+                                (click)="viewRoom(row.id)">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button mat-icon-button
+                                matTooltip="{{ 'rooms.edit-room' | tlTranslate }}"
+                                matTooltipPosition="above"
+                                matTooltipShowDelay="250"
+                                class="cursor-pointer"
+                                (click)="editRoom(row.id)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button
+                                matTooltip="{{ 'rooms.delete-room' | tlTranslate }}"
+                                matTooltipPosition="above"
+                                matTooltipShowDelay="250"
+                                class="cursor-pointer"
+                                (click)="deleteRoom(row.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+
+                    </div>
+                </ng-template>
+            </data-template-column>
+        </tl-data-table>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,14 @@
+<mat-toolbar color="primary" class="m-0" style="min-height: 3em !important; height: 2em;">
+    <mat-toolbar-row class="flex w-full justify-between items-center" style="height: 2em !important;">
+        <h1 matDialogTitle class="text-lg font-bold text-white leading-none">{{ title }}</h1>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="dialog-size">   
+    <mat-dialog-content class="mt-2">
+        <span>{{ message }}</span>
+    </mat-dialog-content>
+</div>
+<mat-dialog-actions class="m-0 pb-0 flex w-full justify-between items-center">
+    <button mat-raised-button color="primary" (click)="cancel()">{{ cancelBtnLabel }}</button>
+    <button mat-raised-button color="accent" (click)="confirm()">{{ okBtnLabel }}</button>
+</mat-dialog-actions>

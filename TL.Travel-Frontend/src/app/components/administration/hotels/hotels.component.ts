@@ -1,0 +1,103 @@
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { TranslateService } from 'app/core/translation/translate.service';
+import { TLConfirmDialog } from 'app/shared/components/confirmation-dialog/utils/tl-confirm-dialog.util';
+import { IRemoteTLDatatableComponent } from 'app/shared/components/data-table/interfaces/tl-remote-datatable.interface';
+import { TLDataTableComponent } from 'app/shared/components/data-table/tl-data-table.component';
+import { DialogParamsModel } from 'app/shared/components/dialog-wrapper/models/dialog-params.model';
+import { TLMatDialog } from 'app/shared/components/dialog-wrapper/tl-mat-dialog';
+import { BaseDataTableManager } from 'app/shared/utils/base-data-table.manager';
+import { CommonUtils } from 'app/shared/utils/common.utils';
+import { HeaderCloseFunction } from 'app/shared/components/dialog-wrapper/interfaces/header-cancel-button.interface';
+import { EditHotelComponent } from './edit-hotel/edit-hotel.component';
+import { HotelsService } from 'app/services/administration/hotels.service';
+import { HotelDTO } from 'app/models/administration/hotel.model';
+
+@Component({
+    selector: 'app-hotels',
+    templateUrl: './hotels.component.html',
+    styleUrl: './hotels.component.scss'
+})
+export class HotelsComponent implements OnInit, AfterViewInit {
+    public readonly recordsPerPage: number = CommonUtils.RECORDS_PER_PAGE;
+
+    @ViewChild(TLDataTableComponent)
+    private datatable!: IRemoteTLDatatableComponent;
+
+    private gridManager!: BaseDataTableManager<HotelDTO>;
+
+    private readonly service: HotelsService;
+    private readonly dialog: TLMatDialog<EditHotelComponent>;
+    private readonly translateService: TranslateService;
+    private readonly confirmationDialog: TLConfirmDialog;
+
+    public constructor(service: HotelsService,
+        dialog: TLMatDialog<EditHotelComponent>,
+        translateService: TranslateService,
+        confirmationDialog: TLConfirmDialog) {
+        this.service = service;
+        this.dialog = dialog;
+        this.translateService = translateService;
+        this.confirmationDialog = confirmationDialog;
+    }
+
+    public ngOnInit(): void {
+    }
+
+    public viewHotel(id: number): void {
+        const title = this.translateService.getValue('hotels.view-hotel-title');
+        this.openHotelDialog(title, new DialogParamsModel(id, true));
+    }
+
+    public addHotel(): void {
+        const title = this.translateService.getValue('hotels.add-hotel-title');
+        this.openHotelDialog(title, new DialogParamsModel(undefined, false));
+    }
+
+    public editHotel(id: number): void {
+        const title = this.translateService.getValue('hotels.edit-hotel-title');
+        this.openHotelDialog(title, new DialogParamsModel(id, false));
+    }
+
+    public deleteHotel(id: number): void {
+        this.confirmationDialog.open({
+            title: this.translateService.getValue('hotels.delete-hotel-title'),
+            message: this.translateService.getValue('hotels.delete-hotel-confirmation'),
+            okBtnLabel: this.translateService.getValue('common.delete'),
+        }).subscribe((result: boolean) => {
+            if (result) {
+                this.service.delete(id).subscribe({
+                    next: () => {
+                        this.gridManager.refreshData();
+                    }
+                });
+            }
+        });
+    }
+
+    public ngAfterViewInit(): void {
+        this.gridManager = new BaseDataTableManager({
+            requestServiceMethod: this.service.getAll.bind(this.service),
+            tlDataTable: this.datatable
+        });
+
+        this.gridManager.refreshData();
+    }
+
+    private openHotelDialog(title: string, data: DialogParamsModel): void {
+        this.dialog.openWithTwoButtons({
+            TCtor: EditHotelComponent,
+            title: title,
+            translteService: this.translateService,
+            headerCancelButton: {
+                cancelBtnClicked: (closeFn: HeaderCloseFunction): void => { closeFn(); }
+            },
+            componentData: data,
+            viewMode: data.isReadonly
+        }, '1300px').subscribe((result: HotelDTO | undefined) => {
+            if (result) {
+                this.gridManager.refreshData();
+            }
+        });
+    }
+}
+

@@ -1,0 +1,233 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Import/write your custom styles here.
+/*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
+/* ----------------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Import/write your custom styles here.
+/*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
+/* ----------------------------------------------------------------------------------------------------- */
+
+// -----------------------------------------------------------------------------------------------------
+// overrides the too lighter color of mat-form-field label
+// -----------------------------------------------------------------------------------------------------
+body.light .mat-form-field-label,
+body .light .mat-form-field-label {
+    color: unset !important;
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ spinner material dialog
+// -----------------------------------------------------------------------------------------------------
+
+.spinner-panel {
+    mat-dialog-container {
+        background-color: transparent !important;
+        box-shadow: none !important;
+    }
+}
+
+// -----------------------------------------------------------------------------------------------------
+// Basic theme colors
+// -----------------------------------------------------------------------------------------------------
+.travel-accent-500 {
+    background-color: theme('colors.accent-500') !important;
+}
+
+.travel-primary-500 {
+    background-color: theme('colors.primary-500') !important;
+}
+
+.travel-accent-color-500 {
+    color: theme('colors.accent-500') !important;
+}
+
+.travel-accent-color-800 {
+    color: theme('colors.accent-800') !important;
+}
+
+
+.travel-primary-color-500 {
+    color: theme('colors.primary-500') !important;
+}
+
+.error-color {
+    color: var(--fuse-warn) !important;
+}
+
+.success-color {
+    color: green !important;
+}
+
+.warn-orange-color {
+    color: orange !important;
+}
+
+.white-color {
+    color: white;
+}
+
+// -----------------------------------------------------------------------------------------------------
+// Basic theme fill colors
+// -----------------------------------------------------------------------------------------------------
+.fill-travel-accent-500 {
+    fill: theme('colors.accent-500')
+}
+
+.fill-travel-accent-700 {
+    fill: theme('colors.accent-700');
+}
+
+// -----------------------------------------------------------------------------------------------------
+// Basic theme stoke colors
+// -----------------------------------------------------------------------------------------------------
+.stoke-travel-accent-500 {
+    stroke: theme('colors.accent-500')
+}
+
+.stoke-travel-accent-700 {
+    stroke: theme('colors.accent-700')
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ material snackbar
+// -----------------------------------------------------------------------------------------------------
+.snack-bar-error-color {
+    background-color: crimson !important;
+}
+
+.snack-bar-error-button-text {
+    .mat-simple-snackbar-action {
+        color: darkblue;
+    }
+}
+
+.snack-bar-success-color {
+    background-color: green !important;
+}
+
+// -----------------------------------------------------------------------------------------------------
+// mat-card styles
+// -----------------------------------------------------------------------------------------------------
+mat-card {
+    mat-card-title {
+        font-weight: 600 !important;
+        font-size: 22px !important;
+
+        padding: 15px !important;
+    }
+}
+
+// -----------------------------------------------------------------------------------------------------
+// Common styles
+// -----------------------------------------------------------------------------------------------------
+.dialog-max-heigth {
+    max-height: 600px;
+}
+
+.flex-box {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.transparent-btn-icon {
+    background: none !important;
+    border: none !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.flex-end-content {
+    justify-content: flex-end;
+}
+
+.justify-center {
+    justify-content: center !important;
+}
+
+.justify-end {
+    justify-content: end !important;
+}
+
+.text-ellipsis {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.multi-line {
+    display: block;
+    white-space: pre-wrap !important;
+    overflow: unset !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+}
+
+.multiline-option {
+    white-space: normal;
+    display: inline-block;
+    line-height: normal;
+}
+
+.break-all-words {
+    word-break: break-all !important;
+}
+
+.scroll {
+    overflow: scroll;
+}
+
+.italic-text {
+    font-style: italic;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.gray-accent {
+    background-color: rgba(220, 220, 220, 0.5)
+}
+
+.dialog-padding {
+    padding: 1em;
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ mat-card -> mat-card-header to have no margins (typically has margin: 0 16px)
+// -----------------------------------------------------------------------------------------------------
+.mat-card-header.no-margin div.mat-card-header-text {
+    margin: 0px 0px 0px 0px !important;
+}
+
+// -----------------------------------------------------------------------------------------------------
+// Makes selected menu item to have specific color from the travel theme
+// -----------------------------------------------------------------------------------------------------
+
+.fuse-vertical-navigation-item-wrapper {
+
+    .fuse-vertical-navigation-item {
+
+        /* Active state */
+        &:not(.fuse-vertical-navigation-item-disabled) {
+
+            &.fuse-vertical-navigation-item-active,
+            &.fuse-vertical-navigation-item-active-forced {
+                @apply travel-accent-color-800;
+            }
+        }
+    }
+}

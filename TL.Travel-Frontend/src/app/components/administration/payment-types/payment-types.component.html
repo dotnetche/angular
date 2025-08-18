@@ -1,0 +1,47 @@
+<mat-card class="flex h-full w-full">
+    <mat-card-content>
+        <tl-data-table [isRemote]="true"
+                       [isSoftDeletable]="false"
+                       [showInactiveRecords]="false"
+                       [recordsPerPage]="recordsPerPage"
+                       (addButtonClicked)="addPaymentType()">
+            <data-column [flexRate]="0.2"
+                         propertyName="name"
+                         columnName="{{ 'payment-types.name' | tlTranslate}}">
+            </data-column>
+            <data-template-column [flexRate]="0.1"
+                                  [isSortable]="false">
+                <ng-template ngx-datatable-cell-template
+                             let-row="row">
+                    <div class="flex flex-row flex-wrap justify-end items-center">
+                        <button mat-icon-button
+                                matTooltip="{{ 'payment-types.view-payment-types' | tlTranslate }}"
+                                matTooltipPosition="above"
+                                matTooltipShowDelay="250"
+                                class="cursor-pointer"
+                                (click)="viewPaymentType(row.id)">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button mat-icon-button
+                                matTooltip="{{ 'payment-types.edit-payment-types' | tlTranslate }}"
+                                matTooltipPosition="above"
+                                matTooltipShowDelay="250"
+                                class="cursor-pointer"
+                                (click)="editPaymentType(row.id)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button
+                                matTooltip="{{ 'payment-types.delete-payment-types' | tlTranslate }}"
+                                matTooltipPosition="above"
+                                matTooltipShowDelay="250"
+                                class="cursor-pointer"
+                                (click)="deletePaymentType(row.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+
+                    </div>
+                </ng-template>
+            </data-template-column>
+        </tl-data-table>
+    </mat-card-content>
+</mat-card>

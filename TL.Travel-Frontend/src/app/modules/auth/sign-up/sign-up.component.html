@@ -1,0 +1,172 @@
+<div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
+    <div class="md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
+        <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+            <!-- Logo -->
+            <div class="w-12">
+                <img src="assets/images/logo/logo.png">
+            </div>
+            <!-- Title -->
+            <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight travel-primary-color-500">
+                {{ 'sign-up.title' | tlTranslate }}
+            </div>
+            <div class="flex items-baseline mt-0.5 font-medium">
+                <div>
+                    {{ 'sign-up.already-have-account' | tlTranslate }}
+                </div>
+                <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['/account/sign-in']">
+                    {{ 'sign-up.sign-in' | tlTranslate }}
+                </a>
+            </div>
+            <!-- Sign Up form -->
+            <div class="mt-8" [formGroup]="form">
+                <!-- Name field -->
+                <mat-form-field class="w-full">
+                    <mat-label>{{ 'sign-up.name' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="nameControl" />
+                    <mat-error *ngIf="form.get('nameControl').hasError('required')">
+                        {{ 'sign-up.name-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('nameControl').hasError('maxlength')">
+                        {{ 'common.field-has-max-length' | tlTranslate }}: {{ form.get('nameControl')!.errors.maxlength.requiredLength }}
+                    </mat-error>
+                </mat-form-field>
+                <!-- Email field -->
+                <mat-form-field class="w-full">
+                    <mat-label>{{ 'sign-up.username' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="emailControl" />
+                    <mat-error *ngIf="form.get('emailControl').hasError('required')">
+                        {{ 'sign-up.username-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('emailControl').hasError('email')">
+                        {{ 'sign-up.email-must-be-valid' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('emailControl').hasError('maxlength')">
+                        {{ 'common.field-has-max-length' | tlTranslate }}: {{ form.get('emailControl')!.errors.maxlength.requiredLength }}
+                    </mat-error>
+                </mat-form-field>
+                <!-- Password field -->
+                <mat-form-field class="w-full">
+                    <mat-label>{{ 'sign-up.password' | tlTranslate }}</mat-label>
+                    <input matInput 
+                           type="password" 
+                           formControlName="passwordControl" 
+                           #password />
+                    <button mat-icon-button 
+                            type="button" 
+                            (click)="password.type === 'password' ? password.type = 'text' : password.type = 'password'"
+                            matSuffix>
+                        <mat-icon class="icon-size-5" 
+                                  *ngIf="password.type === 'password'"
+                                  [svgIcon]="'heroicons_solid:eye'">
+                        </mat-icon>
+                        <mat-icon class="icon-size-5" 
+                                  *ngIf="password.type === 'text'"
+                                  [svgIcon]="'heroicons_solid:eye-off'">
+                        </mat-icon>
+                    </button>
+                    <mat-error *ngIf="form.get('passwordControl').hasError('required')">
+                        {{ 'sign-up.password-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('passwordControl').hasError('maxlength')">
+                        {{ 'common.field-has-max-length' | tlTranslate }}: {{ form.get('passwordControl')!.errors.maxlength.requiredLength }}
+                    </mat-error>
+                </mat-form-field>
+                <!-- Password confirmation field -->
+                <mat-form-field class="w-full">
+                    <mat-label>{{ 'sign-up.password-confirmation' | tlTranslate }}</mat-label>
+                    <input matInput type="password" formControlName="passwordConfirmationControl" #confirmPassword />
+                    <button mat-icon-button 
+                            type="button" 
+                            (click)="confirmPassword.type === 'password' ? confirmPassword.type = 'text' : confirmPassword.type = 'password'"
+                            matSuffix>
+                        <mat-icon class="icon-size-5" 
+                                  *ngIf="confirmPassword.type === 'password'"
+                                  [svgIcon]="'heroicons_solid:eye'">
+                        </mat-icon>
+                        <mat-icon class="icon-size-5" 
+                                  *ngIf="confirmPassword.type === 'text'"
+                                  [svgIcon]="'heroicons_solid:eye-off'">
+                        </mat-icon>
+                    </button>
+                    <mat-error *ngIf="form.get('passwordConfirmationControl').hasError('required')">
+                        {{ 'sign-up.password-confirmation-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('passwordConfirmationControl').hasError('passwordsNotMatching')">
+                        {{ 'sign-up.password-confirmation-must-match-password' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('passwordConfirmationControl').hasError('required')">
+                        {{ 'sign-up.password-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('passwordConfirmationControl').hasError('maxlength')">
+                        {{ 'common.field-has-max-length' | tlTranslate }}: {{ form.get('passwordConfirmationControl')!.errors.maxlength.requiredLength }}
+                    </mat-error>
+                </mat-form-field>
+                <!-- Phone -->
+                <mat-form-field class="w-full">
+                    <mat-label>{{ 'sign-up.phone' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="phoneControl" />
+                    <mat-error *ngIf="form.get('phoneControl').hasError('required')">
+                        {{ 'sign-up.phone-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('phoneControl').hasError('maxlength')">
+                        {{ 'common.field-has-max-length' | tlTranslate }}: {{ form.get('phoneControl')!.errors.maxlength.requiredLength }}
+                    </mat-error>
+                </mat-form-field>
+                <!-- Address -->
+                <mat-form-field class="w-full">
+                    <mat-label>{{ 'sign-up.address' | tlTranslate }}</mat-label>
+                    <input matInput formControlName="addressControl" />
+                    <mat-error *ngIf="form.get('addressControl').hasError('required')">
+                        {{ 'sign-up.address-is-required' | tlTranslate }}
+                    </mat-error>
+                    <mat-error *ngIf="form.get('addressControl').hasError('maxlength')">
+                        {{ 'common.field-has-max-length' | tlTranslate }}: {{ form.get('addressControl')!.errors.maxlength.requiredLength }}
+                    </mat-error>
+                </mat-form-field>
+                <!-- Submit button -->
+                <button class="fuse-mat-button-large w-full mt-6"
+                        mat-flat-button
+                        color="primary"
+                        [disabled]="form.disabled"
+                        (click)="signUp()">
+                    <span *ngIf="!form.disabled">
+                        {{ 'sign-up.create-profile' | tlTranslate }}
+                    </span>
+                    <mat-progress-spinner *ngIf="form.disabled" [diameter]="24" mode="indeterminate"></mat-progress-spinner>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden bg-travel-800 dark:border-l">
+        <!-- Background - @formatter:off -->
+        <!-- Rings -->
+        <svg class="absolute inset-0 pointer-events-none"
+             viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+            <g class="opacity-25 stoke-travel-accent-700" fill="none" stroke-width="100">
+                <circle r="234" cx="196" cy="23"></circle>
+                <circle r="234" cx="790" cy="491"></circle>
+            </g>
+        </svg>
+        <!-- Dots -->
+        <svg class="absolute -top-16 -right-16 travel-primary-color-500"
+             viewBox="0 0 220 192" width="220" height="192" fill="none">
+            <defs>
+                <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <rect x="0" y="0" width="4" height="4" class="fill-travel-accent-700"></rect>
+                </pattern>
+            </defs>
+            <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
+        </svg>
+        <!-- @formatter:on -->
+        <!-- Content -->
+        <div class="z-10 relative w-full max-w-2xl">
+            <div class="text-7xl font-bold leading-none travel-primary-color-500">
+                <div>{{ 'sign-up.welcome' | tlTranslate }}</div>
+                <div>{{ 'sign-up.in-tl-travel' | tlTranslate }}</div>
+            </div>
+            <div class="mt-6 text-lg tracking-tight leading-6 travel-primary-color-500">
+                {{ 'sign-up.app-summary' | tlTranslate }}
+            </div>
+        </div>
+    </div>
+</div>
